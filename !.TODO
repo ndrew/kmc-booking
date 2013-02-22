@@ -5,7 +5,10 @@ General:
  ☐ livescript
 
  ☐ php and js separation
- 
+ ☐ Comet support
+     ☐ piggyback
+     ☐ simple polling
+     ✔ long polling — FAIL, if we use PHP backend @done (13-02-22 11:36)
  
 Frontend v0.1:
   !inbox
@@ -15,6 +18,11 @@ Frontend v0.1:
    ☐ visual seats schema editor 
      ☐ 
 Backend v0.1:
+  ☐ technology:
+    ☐ php
+    ☐ clojure
+    ☐ nodejs
+
   admin
     ☐ moar security
   client
