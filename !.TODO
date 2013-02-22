@@ -1,12 +1,48 @@
- ☐ add license
- ☐ php and js separation
- ☐ separate sql stuff
- ☐ returning prices
- ☐ tool for generating layouts 
-
- ☐ ui customization
- ☐ error messages
- ☐ translations
-
- ☐ sass?
+General:
+ ✔ choose license — WTFL @done (13-02-21 13:38)
  
+ ☐ clojurescript or cofeescript?
+ ☐ livescript
+
+ ☐ php and js separation
+ 
+ 
+Frontend v0.1:
+  !inbox
+   ☐ translations
+   ☐ ui customization
+   ☐ error messages
+   ☐ visual seats schema editor 
+     ☐ 
+Backend v0.1:
+  admin
+    ☐ moar security
+  client
+    ☐ sessions
+    ☐ auth
+      ☐ do research
+ ☐ installation
+   ☐ sql
+ ☐ returning prices
+
+Infrastructure:
+  build systems
+    ☐ yuicompressor — http://yui.github.com/yuicompressor/
+      ☐ pros: java; cons — ?
+    ☐ https://github.com/gruntjs/grunt
+      ☐ pros: modularity, cons —
+    ☐ buildr — https://github.com/balupton/buildr.npm
+      ☐ ?
+    ☐ requirejs — http://requirejs.org/docs/optimization.html
+    ☐ http://www.cappuccino-project.org/
+  unit testing
+  modularity
+    ☐ requrejs?
+    ☐ sass?
+  code format and other stuff
+    ☐ graceful degradation
+       ✔ booking without js       —  NO! @done (13-02-21 13:37)
+       ☐ alert on disabled js?
+  task tracker
+    ☐ git-ttt
+    ☐ github

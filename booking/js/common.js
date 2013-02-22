@@ -36,63 +36,63 @@ window.log = function f(){ log.history = log.history || []; log.history.push(arg
 // place any jQuery/helper plugins in here, instead of separate, slower script files.
 
 /**
-	 * Simple callback iterator
-	 */ 
-	function Range(start, end) {	
-		this.size = function() {
-			return end - start
-		}
+   * Simple callback iterator
+   */ 
+  function Range(start, end) {  
+    this.size = function() {
+      return end - start
+    }
 
-		this.in = function(n) {
-			return n >= start && n<=end
-		}
+    this.in = function(n) {
+      return n >= start && n<=end
+    }
 
-		this.iterate = function(cb) {
-			for (var i = start; i <= end; i++) {
-				cb(i)
-			}
-		}
-	}
+    this.iterate = function(cb) {
+      for (var i = start; i <= end; i++) {
+        cb(i)
+      }
+    }
+  }
 
-	function Prices() {
-		var prices = [
-			{
-				'rows': new Range(1,6),
-				'seats': new Range(4,36),
-				'price': 60 
-			},{
-				'rows': new Range(7,13),
-				'seats': new Range(4,36),
-				'price': 50 
-			},{
-				'rows': new Range(14,20),
-				'seats': new Range(1,31),
-				'price': 40 
-			},{
-				'rows': new Range(21,21),
-				'seats': new Range(1,25),
-				'price': 40 
-			},{
-				'rows': new Range(1,11),
-				'seats': new Range(1,3),
-				'price': 30 
-			}, {
-				'rows': new Range(1,11),
-				'seats': new Range(37,39),
-				'price': 30 
-		}]
+  function Prices() {
+    var prices = [
+      {
+        'rows': new Range(1,6),
+        'seats': new Range(4,36),
+        'price': 60 
+      },{
+        'rows': new Range(7,13),
+        'seats': new Range(4,36),
+        'price': 50 
+      },{
+        'rows': new Range(14,20),
+        'seats': new Range(1,31),
+        'price': 40 
+      },{
+        'rows': new Range(21,21),
+        'seats': new Range(1,25),
+        'price': 40 
+      },{
+        'rows': new Range(1,11),
+        'seats': new Range(1,3),
+        'price': 30 
+      }, {
+        'rows': new Range(1,11),
+        'seats': new Range(37,39),
+        'price': 30 
+    }]
 
-		this.getPrice = function(row, seat) {
-			for (var i = prices.length - 1; i >= 0; i--) {
-				var p = prices[i]
-				if (p.rows.in(row) && p.seats.in(seat)) {
-					return p.price;
-				}
-			};
-			return 0;
-		}
+    this.getPrice = function(row, seat) {
+      for (var i = prices.length - 1; i >= 0; i--) {
+        var p = prices[i]
+        if (p.rows.in(row) && p.seats.in(seat)) {
+          return p.price;
+        }
+      };
+      return 0;
+    }
 
-	}
+  }
 
 function getURLParameter(name) {
     return decodeURI(
@@ -106,13 +106,13 @@ function getURLParameter(name) {
  */
 function ErrorHandler() {
 
-	this.requestFailed = function() {
-		alert("Холєра, сайт не робе! Зайдіть потім")	
-	};
+  this.requestFailed = function() {
+    alert("Холєра, сайт не робе! Зайдіть потім")  
+  };
 
-	this.notLoaded = function() {
-		alert("Can't load page! Check your internet connection and try refreshing page one time.");
-	};
+  this.notLoaded = function() {
+    alert("Can't load page! Check your internet connection and try refreshing page one time.");
+  };
 
 }
 
@@ -123,38 +123,38 @@ var errHandler = new ErrorHandler();
  */
 function Ajax() {
 
-	function get_url() {
-	  	var controller_url = "main.php?" 
-	    if (typeof request_prefix != "undefined") {
-	    	controller_url = request_prefix + controller_url;	
-	    }  
-		return controller_url
-	}
+  function get_url() {
+      var controller_url = "main.php?" 
+      if (typeof request_prefix != "undefined") {
+        controller_url = request_prefix + controller_url; 
+      }  
+    return controller_url
+  }
 
 
-	this.post = function(action, data, cb) {
-		$.post(get_url() + action, data, function(data) {
-		  	cb(data);
-		}, "json");
-	}
+  this.post = function(action, data, cb) {
+    $.post(get_url() + action, data, function(data) {
+        cb(data);
+    }, "json");
+  }
 
 
-	this.request = function(action, cb, err_cb) {
+  this.request = function(action, cb, err_cb) {
 
-	    var request_params = {
-	    	url: get_url() + action,
-	    	dataType: 'json',
-	    	success: function(response, textStatus, jqXHR) {
-	    		cb(response)
-	    	},
-	    	error: function (response, textStatus, errorThrown) {
-	    		// TODO: scope stuff
-    			errHandler.requestFailed();
-			}
-		}
-	    $.ajax(request_params);
-	}
-	
+      var request_params = {
+        url: get_url() + action,
+        dataType: 'json',
+        success: function(response, textStatus, jqXHR) {
+          cb(response)
+        },
+        error: function (response, textStatus, errorThrown) {
+          // TODO: scope stuff
+          errHandler.requestFailed();
+      }
+    }
+      $.ajax(request_params);
+  }
+  
 }
 
 var ajax = new Ajax();
