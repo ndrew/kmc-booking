@@ -1,0 +1,6 @@
+15:49:09.908 [nREPL-worker-0] INFO  org.eclipse.jetty.server.Server - jetty-8.1.9.v20130131
+15:49:10.101 [nREPL-worker-0] INFO  o.e.jetty.server.AbstractConnector - Started SelectChannelConnector@0.0.0.0:8080
+15:49:19.265 [qtp347356060-24] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+15:49:19.430 [qtp347356060-21] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:49:43.251 [qtp347356060-24] INFO  io.pedestal.service.http - {:line 55, :msg "GET /about"}
+15:49:43.320 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
