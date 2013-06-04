@@ -4,3 +4,46 @@
 15:49:19.430 [qtp347356060-21] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
 15:49:43.251 [qtp347356060-24] INFO  io.pedestal.service.http - {:line 55, :msg "GET /about"}
 15:49:43.320 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:54:33.747 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /about"}
+15:54:33.797 [qtp347356060-22] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:54:34.417 [qtp347356060-24] INFO  io.pedestal.service.http - {:line 55, :msg "GET /about"}
+15:54:34.445 [qtp347356060-25] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:54:40.316 [qtp347356060-21] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+15:54:40.357 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:54:41.219 [qtp347356060-24] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+15:54:41.244 [qtp347356060-25] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:54:41.661 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+15:54:41.689 [qtp347356060-22] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:54:42.004 [qtp347356060-23] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+15:54:42.034 [qtp347356060-24] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:54:49.321 [qtp347356060-21] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+15:54:49.358 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:07:22.667 [qtp347356060-22] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:07:22.706 [qtp347356060-25] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:07:27.596 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:07:27.643 [qtp347356060-23] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:10:21.887 [qtp347356060-21] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:10:21.934 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:10:24.735 [qtp347356060-21] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:10:24.761 [qtp347356060-19] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:10:25.756 [qtp347356060-22] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:10:25.783 [qtp347356060-21] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:10:27.654 [qtp347356060-22] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:10:27.725 [qtp347356060-21] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:10:40.286 [nREPL-worker-2] INFO  o.e.j.server.handler.ContextHandler - stopped o.e.j.s.ServletContextHandler{/,null}
+16:10:43.438 [nREPL-worker-2] INFO  org.eclipse.jetty.server.Server - jetty-8.1.9.v20130131
+16:10:43.440 [nREPL-worker-2] INFO  o.e.jetty.server.AbstractConnector - Started SelectChannelConnector@0.0.0.0:8080
+16:10:45.911 [qtp226977809-37] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:10:45.940 [qtp226977809-33] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:10:46.734 [qtp226977809-35] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:10:46.759 [qtp226977809-36] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:11:00.756 [qtp226977809-37] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:11:00.798 [qtp226977809-33] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:11:01.796 [qtp226977809-32] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:11:01.822 [qtp226977809-36] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:11:02.212 [qtp226977809-37] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:11:02.237 [qtp226977809-34] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}
+16:15:19.011 [nREPL-worker-1] INFO  org.eclipse.jetty.server.Server - jetty-8.1.9.v20130131
+16:15:19.062 [nREPL-worker-1] INFO  o.e.jetty.server.AbstractConnector - Started SelectChannelConnector@0.0.0.0:8080
+16:15:27.581 [qtp1908827582-24] INFO  io.pedestal.service.http - {:line 55, :msg "GET /"}
+16:15:27.649 [qtp1908827582-26] INFO  io.pedestal.service.http - {:line 55, :msg "GET /favicon.ico"}

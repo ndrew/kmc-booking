@@ -9,15 +9,29 @@
   [request]
   (ring-resp/response (format "Clojure %s" (clojure-version))))
 
+(defn seats-edn
+  [request]
+  (ring-resp/response ["Testo" "Pesto"]))
+
+
+
 (defn home-page
   [request]
-  (ring-resp/response "Hello World!"))
+  (ring-resp/response "Bla-bla-bla!"))
 
 (defroutes routes
   [[["/" {:get home-page}
      ;; Set default interceptors for /about and any other paths under /
      ^:interceptors [(body-params/body-params)]
-     ["/about" {:get about-page}]]]])
+     ["/about" {:get about-page}]
+     ["/seats" {:get seats-edn}]
+     ;["/book"
+     ;   ^:interceptors [verify-booking]
+     ;   {:get list-bookings :post create-booking}
+     ;   ["/:id"
+     ;     ^:interceptors [verify-booking-ownership load-booking-from-db]
+     ;     {:get view-booking :put update-booking}]]
+     ]]])
 
 ;; You can use this fn or a per-request fn via io.pedestal.service.http.route/url-for
 (def url-for (route/url-for-routes routes))
