@@ -1,0 +1,94 @@
+[
+ {:db/id #db/id[:db.part/db]
+  :db/ident :seats/id
+  :db/valueType :db.type/keyword
+  :db/cardinality :db.cardinality/one
+  :db/fulltext true
+  :db/doc "A seat id"
+  :db/unique :db.unique/identity
+  :db.install/_attribute :db.part/db}
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :customer/id
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "A customer id"
+  :db/unique :db.unique/identity
+  :db.install/_attribute :db.part/db}
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :customer/tel
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A customer contact number"
+  :db.install/_attribute :db.part/db}
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :customer/name
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "A customer name(salutation)"
+  :db.install/_attribute :db.part/db}
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :customer/comment
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Internal notes about customer"
+  :db.install/_attribute :db.part/db}
+
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :booking/id
+  :db/valueType :db.type/long
+  :db/cardinality :db.cardinality/one
+  :db/doc "booking id"
+  :db.install/_attribute :db.part/db}
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :booking/user
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "user-id that booked"
+  :db.install/_attribute :db.part/db}
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :booking/seats
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/many
+  :db/doc "seats taken"
+  :db.install/_attribute :db.part/db}
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :booking/status
+  :db/valueType :db.type/ref
+  :db/cardinality :db.cardinality/one
+  :db/doc "A booking status"
+  :db.install/_attribute :db.part/db}
+
+
+{:db/id #db/id[:db.part/db]
+  :db/ident :booking/comment
+  :db/valueType :db.type/string
+  :db/cardinality :db.cardinality/one
+  :db/doc "Internal notes about booking"
+  :db.install/_attribute :db.part/db}
+
+
+;;
+ [:db/add #db/id[:db.part/user] :db/ident :booking.status/free]
+ [:db/add #db/id[:db.part/user] :db/ident :booking.status/pre-booked]
+ [:db/add #db/id[:db.part/user] :db/ident :booking.status/booked]
+
+
+
+]
+
