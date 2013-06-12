@@ -6,14 +6,18 @@
             [io.pedestal.service.log :as log]
             ;; the impl dependencies will go away
             ;; these next two will collapse to one
-            [io.pedestal.service.interceptor :as interceptor :refer [definterceptorfn defon-response defon-request defafter defbefore]]
+            [io.pedestal.service.interceptor :as interceptor :refer [definterceptor definterceptorfn defon-response defon-request defafter defbefore]]
             [io.pedestal.service.http :as bootstrap]
             [io.pedestal.service.http.impl.servlet-interceptor :as servlet-interceptor]
             [io.pedestal.service.interceptor :as interceptor]
             [io.pedestal.service.http.route.definition :refer [expand-routes]]
             [io.pedestal.service.http.ring-middlewares :as middlewares]
             [io.pedestal.service.http.route :as route]
+            ;
+            [io.pedestal.service.http.sse :refer :all]
+            ;
             [ring.util.response :as ring-resp]
+            [ring.middleware.session.cookie :as cookie]
             [clojure.data.codec.base64 :as base64]))
 
 
@@ -38,9 +42,9 @@
   (byte-transform base64/decode string))
 
 
-(defn about-page
-  [request]
-  (ring-resp/response (format "<html><body>%s</body></html>" (pr-str request))))
+;(defn about-page
+;  [request]
+;  (ring-resp/response (format "<html><body>%s</body></html>" (pr-str request))))
 
 
 (defn home-page
@@ -58,7 +62,7 @@
 (defn auth-page [] 
   {:status 401 
    :headers {"Content-Type" "text/html; charset=utf-8"
-             "WWW-Authenticate" (authentication-text "ПАРОЛЬ!")}
+             "WWW-Authenticate" (authentication-text "Please authorize yourself")}
    :body "Restricted!"})
 
 
@@ -88,7 +92,13 @@
 
 
 (def auth-map {
-  "odmin" "odmin"})
+  "odmin" "0dmin"})
+
+
+(defn- session-id [] (.toString (java.util.UUID/randomUUID)))
+
+(definterceptor session-interceptor
+  (middlewares/session {:store (cookie/cookie-store)}))
 
 
 (defbefore basic-auth [context]
@@ -112,17 +122,98 @@
            {:response (auth-page)})))
 
 
+;;; sse stuff
+
+(def ^{:doc "Map of subscriber IDs to SSE contexts"} 
+  subscribers (atom {}))
+
+(defn context-key
+  "Return key for given `context`."
+  [cookie-name sse-context]
+  (get-in sse-context [:request :cookies cookie-name :value]))
+
+
+(defn add-subscriber
+  "Add `context` to subscribers map."
+  [cookie-name sse-context]
+  (swap! subscribers assoc (context-key cookie-name sse-context) sse-context))
+
+(defn remove-subscriber
+  [cookie-name context]
+  ;(log/info :msg "removing subscriber")
+  (swap! subscribers dissoc (context-key cookie-name context))
+  (end-event-stream context))
+
+
+
+(declare url-for)
+
+(defn subscribe-for
+  [queue-id redirect-to request]
+     (let [session-id (or (get-in request [:cookies queue-id :value])
+                          (session-id))
+           cookie {(keyword queue-id) {:value session-id :path "/"}}]
+       (-> (ring-resp/redirect (url-for redirect-to))
+           (update-in [:cookies] merge cookie))))
+
+
+(def admin-subscribe (partial subscribe-for "admin-session" ::wait-for-events))
+
+(def wait-for-events (sse-setup (partial add-subscriber "admin-session")))
+
+
+(defn remove-subscriber
+  "Remove `context` from subscribers map and end the event stream."
+  [cookie-name context]
+  ; (log/info :msg "removing subscriber")
+  (swap! subscribers dissoc (context-key cookie-name context))
+  (end-event-stream context))
+
+
+
+(defn send-to-subscriber
+  "Send `msg` as event to event stream represented by `context`. If
+  send fails, removes `context` from subscribers map."
+  [cookie-name context msg]
+  (try
+    ;(log/info :msg "calling event sending fn")
+    (send-event context "msg" msg)
+    (catch java.io.IOException ioe
+      (log/error :msg "Exception from event send"
+                 :exception ioe)
+      (remove-subscriber cookie-name context))))
+           
+    
+(defn send-to-subscribers
+  "Send `msg` to all event streams in subscribers map."
+  [cookie-name msg]
+  ;(log/info :msg "sending to all subscribers")
+  (doseq [sse-context (vals @subscribers)]
+    (send-to-subscriber cookie-name sse-context msg)))
+
+
+           
+(defn admin-publish [req]
+  (let [msg-data [:updated [:1_1 :1_2] ]]
+    ;; pr-str won't be needed in the future
+    (send-to-subscribers "admin-session" 
+                         (pr-str msg-data)))
+    (ring-resp/response ""))
+           
 (defroutes routes
   [[["/"
-     ^:interceptors [dummy-interceptor] ; add data for request 
-     {:get about-page}]
-    ["/odmin" 
-     ^:interceptors [basic-auth]
-     {:get admin-page}]]])
+     {:get home-page}]
+    ["/booking"
+     ^:interceptors [dummy-interceptor session-interceptor] ; add data for request 
+      ["/test-add" {:get admin-publish}]
+      ["/odmin" ^:interceptors [basic-auth ] {:get admin-subscribe}
+          ["/all" {:get wait-for-events}]
+     ]]]])
 
 
 ;; You can use this fn or a per-request fn via io.pedestal.service.http.route/url-for
 (def url-for (route/url-for-routes routes))
+
 
 
 (defon-response default-cache-control-to-no-cache
@@ -160,6 +251,13 @@
     context))
 
 
+
+;;; TBD:
+; 0. init web app
+; 1. session for admins (storing current user)
+; 2. sse for seat updating
+
+
 ;; Consumed by booking-service.server/create-server
 (def service {:env :prod
               ;; You can bring your own non-default interceptors. Make
@@ -170,20 +268,21 @@
               ::bootstrap/routes routes
 
               ::bootstrap/interceptors [
+                  bootstrap/log-request
+                  ; tbd: remove this
                   log-request
-                  
                   log-response
                   
                   not-found
-                  
                   (route/router routes)
                   
-                  (middlewares/file-info)
-                  (middlewares/file "public" {:index-files? false})
+                  (middlewares/resource "public")
+;                  (middlewares/file-info)
+;                  (middlewares/file "public" {:index-files? false})
                   
                   ]
                   ;default-cache-control-to-no-cache
-                  ;bootstrap/log-request
+                  ;
                   ;servlet-interceptor/exception-debug
                   ;middlewares/cookies
                   ;(middlewares/params)
