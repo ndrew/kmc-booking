@@ -27,7 +27,7 @@
                   ;; The default template to use when creating host
                   ;; pages for each aspect below. Override this in an
                   ;; aspect by adding a :template key.
-                  :default-template "booking-app.html"
+                  :default-template "application.html"
                   ;; The root directory in which to put build
                   ;; output. Possible values are :public and
                   ;; :tools-public. Override this value in an aspect
@@ -42,18 +42,20 @@
                              :order 0}}
     ;; Enable built-in features of the application development
     ;; tool. In the example below we enable the rendering view.
-    :built-in {:render {;; The directory where rendering scripts will
+    :built-in {:render {;; The directory where rendering scripts
                         ;; are stored
                         :dir "booking-app"
                         ;; The namespace which contains the renderer
                         ;; to use. This namespace must have a
                         ;; `render-config` function which returns a
                         ;; render configuration.
-                        :renderer 'booking_app.rendering
+                        :renderer 'booking-app.rendering
                         ;; Enable logging of rendering data when in
                         ;; this view.
                         :logging? true
-                        :order 2}}
+                        :order 2
+                        ;; The render menu uses the tooling.html template
+                        :menu-template "tooling.html"}}
     ;; Each aspect provides a unique way to view and interact with
     ;; this application.
     :aspects {;; Add an aspect that uses the data renderer
@@ -69,18 +71,20 @@
                         :out-file "booking-app-data-ui.js"
                         ;; The namespace which contains the `main`
                         ;; function to call to start the application.
-                        :main 'booking_app.simulated.start
+                        :main 'booking-app.simulated.start
                         ;; Allow render data recording. Use
                         ;; Alt-Shift-R to start and stop recording.
                         :recording? true
                         ;; Turn on logging
                         :logging? true
                         ;; build output goes to tools/out/public
-                        :output-root :tools-public}
+                        :output-root :tools-public
+                        ;; The data-ui aspect uses the tooling.html template
+                        :template "tooling.html"}
               :development {:uri "/booking-app-dev.html"
                             :name "Development"
                             :out-file "booking-app-dev.js"
-                            :main 'booking_app.start
+                            :main 'booking-app.start
                             :logging? true
                             :order 3}
               :fresh {:uri "/fresh.html"
@@ -88,10 +92,11 @@
                       :out-file "fresh.js"
                       :main 'io.pedestal.app.net.repl_client
                       :order 4
-                      :output-root :tools-public}
+                      :output-root :tools-public
+                      :template "tooling.html"}
               :production {:uri "/booking-app.html"
                            :name "Production"
                            :optimizations :advanced
                            :out-file "booking-app.js"
-                           :main 'booking_app.start
+                           :main 'booking-app.start
                            :order 5}}}})

@@ -1,7 +1,7 @@
 /* CSS for booking-app */
 
-#content {
-/*  margin-top: 30px; */
+/*#content {
+  margin-top: 30px;
 }
 
 .message {
@@ -9,6 +9,14 @@
   font-weight: bold;
   margin-top: 50px;
 }
+*/
+
+
+
+
+
+
+
 
 
 /*
@@ -234,7 +242,7 @@ td { vertical-align: top; }
 body{
   margin-left: 40px;
   margin-top: 70px;
-  background-image: url('floor.png');
+  background-image: url('../img/floor.png');
 }
 
 /* header stuff */
@@ -264,7 +272,7 @@ footer {
 
 }
 
-/* ÐÐÐ Ð¢ÐÐ  */
+/* ПАРТЕР */
 
 #parter {
   width: 1168px;
@@ -274,7 +282,7 @@ footer {
   font-size: 9px;
 }
 
-/* Ð±Ð¾ÐºÐ¾Ð²Ñ Ð»Ð¾Ð¶Ñ */
+/* бокові ложі */
 
 .side_house {
   position: absolute;
@@ -291,7 +299,7 @@ footer {
     right: 20px; /* background-color: #DFF; */
 }
 
-/* Ð¿Ð¾ÑÐ°ÑÐ¾Ðº Ð¿Ð°ÑÑÐµÑÑ */
+/* початок партеру */
 
 .house {
   position: absolute;
@@ -308,7 +316,7 @@ footer {
   width: 450px; /* background-color: #DFD; */
 }
 
-/* ÐÐÐÐ¬ÐÐ¢ÐÐ) */
+/* БЕЛЬЄТАЖ) */
 
 #back_house {
   font-size: 9px;
@@ -334,6 +342,7 @@ footer {
 /* scene */
 
 .scene {
+
   color: #99999;
   font-size: 10px;
   text-shadow: 1px 1px 1px #fff;
@@ -342,27 +351,26 @@ footer {
   text-align: center;  
 
   padding: 0;
-  margin-top: 10px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: 80px;
+  margin-left: 142px;
   margin-bottom: 42px;
   width: 900px;
   height: 48px;
-  background-image: url('scene.png');
+  background-image: url('../img/scene.png');
 }
 
 .scene_start {
   float: left;
   height: 48px;
   width: 8px;
-  background-image: url('scene_left.png');
+  background-image: url('../img/scene_left.png');
 }
 
 .scene_end {
   float: right;
   height: 48px;
   width: 8px;
-  background-image: url('scene_right.png');
+  background-image: url('../img/scene_right.png');
 }
 
 /* seats */
@@ -377,21 +385,21 @@ footer {
   margin-left: 2px;
   margin-top: 1px;
   margin-bottom: 1px;
-  background-image: url('free.png');
+  background-image: url('../img/free.png');
   /*background-color: gray;*/
 }
 
 
 .seat_booked {
- background-image: url('reserved.png');
+ background-image: url('../img/reserved.png');
 }
 
 .seat_pending {
-  background-image: url('pending.png');
+  background-image: url('../img/pending.png');
 }
 
 .seat_your {
-  background-image: url('your.png');
+  background-image: url('../img/your.png');
 }
 
 

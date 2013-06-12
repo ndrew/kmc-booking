@@ -6,27 +6,22 @@
 ;; behavior.
 ;;
 ;; This namespace will usually contain a function which can be
-;; configured to receive effect events from the bahavior in the file
+;; configured to receive effect events from the behavior in the file
 ;;
 ;; app/src/booking_app/start.cljs
 ;;
 ;; After creating a new application, set the effect handler function
-;; to recieve effect
+;; to receive effect
 ;;
 ;; (app/consume-effect app services-fn)
 ;;
 ;; A very simple example of a services function which echos all events
 ;; back to the behavior is shown below
 
-(defn booking-services-fn [message input-queue] 
-                      ;;; 
-                      )
-
-
 (comment
 
   ;; The services implementation will need some way to send messages
-  ;; back to the application. The queue passed to services function
+  ;; back to the application. The queue passed to the services function
   ;; will convey messages to the application.
   (defn echo-services-fn [message queue]
     (put-message queue message))
