@@ -5,8 +5,6 @@
             [io.pedestal.app.render :as render]
             [io.pedestal.app.messages :as msg]
             
-            [io.pedestal.app.render.events :as events]
-            
             [booking-app.behavior :as behavior]
             [booking-app.rendering :as rendering]
             
@@ -16,38 +14,59 @@
 
 
 
-; When the button is clicked, send a message to :todo topic to kick off the
-; process.
-(defn bind-seats-form [input-queue]
- (events/send-on-click
-   (dom/by-class "seat")
-   input-queue
-   (fn [e]
-     (let [seat-el (.-currentTarget (.-evt e))
-           x (js/parseInt(dom/attr seat-el "x"))
-           y (js/parseInt(dom/attr seat-el "y"))]
-       
-       (.log js/console seat-el x y)
-       
-       [{msg/topic :booking msg/type :seat-selected :value [x y]}]       
-       ))))
 
-(defn bind-booking-form [input-queue]
-  (events/send-on-click
-    (dom/by-id "pre_book")
-    input-queue
-    (fn [e]
-      (.log js/console (.-currentTarget (.-evt e)))
-      
-      [{msg/topic :booking 
-        msg/type :show-form 
-        :value true}]
-      )))  
+(defn render-booking [[op nodes v]]
+  (render/log-fn [op nodes v])
+  (.log js/console "render-booking" (pr-str op) (pr-str nodes) (pr-str v))
+
   
+  ; what this should return
+)
+
+(defn render-form[show]
+  (dom/set-classes! (dom/by-id "pre_book") (if show 
+                                              "invisible"
+                                              "visible"))
+  
+  (dom/set-classes! (dom/by-id "booking_form") (if show 
+                                              "visible"
+                                              "invisible"))
+  
+  
+)
+
+
+(defn booking-renderer [] ; do we really need this?
+  (fn [deltas input-queue]
+    (.log js/console "on render: " (pr-str deltas) (pr-str input-queue))
+    (doseq [d deltas]
+      (.log js/console "delta " (pr-str d))
+      ; we don't care about node creation here
+      (if (= :value (first d))
+        (let [[_ [model] old-state new-state] d
+              show-form (get (last new-state) :form-show false)]
+          
+          (render-form show-form)
+          
+        )
+        
+        )
+      
+      )
+        
+    ; change init queue
+    
+    ))
+
+
+
 
 (defn create-app [render-config]
   (let [app (app/build behavior/booking-app)
-        render-fn (push-render/renderer "content" render-config render/log-fn)
+        render-fn (booking-renderer) ;  render-config ; do not use it yet
+        
+        ;(push-render/renderer "content" render-config render-booking)
+        
         ;; This application does not yet have services, but if it did,
         ;; this would be a good place to create it.
         ;; services-fn (fn [message input-queue] ...)
@@ -55,20 +74,15 @@
     ;; If services existed, configure the application to send all
     ;; effects there.
     ;; (app/consume-effect app services-fn)
+
     ;; Start the application
     (app/begin app)
     
     (let [input-queue (:input app)]
-      (bind-seats-form input-queue)
-      (bind-booking-form input-queue)      
-      )
+      ;(behavior/bind-seats-form input-queue)
+      (behavior/bind-booking-form input-queue))
 
-    ;; Send a message to the application so that it does something.
-    ;(p/put-message (:input app) {msg/type :init-seats 
-    ;                             msg/topic [:seats] 
-    ;                             :value [:1_1 :1_2]})
-    ;(p/put-message (:input app) {msg/type :set-value msg/topic [:greeting] :value "Hello World!"})
-    {:app app :app-model app-model}))
+      {:app app :app-model app-model}))
 
 
 (defn ^:export main []

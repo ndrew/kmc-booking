@@ -6,6 +6,8 @@
   (:require-macros [booking-app.html-templates :as html-templates]))
 
 
+; do not use this now
+
 (def templates (html-templates/booking-app-templates))       ;; Load templates.
 
 ;; The way rendering is handled below is the result of using the
@@ -40,7 +42,10 @@
     ;; Call the `html` function, passing the initial values for the
     ;; template. This returns an HTML string which is then added to
     ;; the DOM using Domina.
-    (dom/append! (dom/by-id parent) (html {:id id :message ""}))))
+    ; not now
+    ;(dom/append! (dom/by-id parent) (html {:id id :message ""}))
+    ))
+
 
 (defn render-message [renderer [_ path _ new-value] transmitter]
   ;; This function responds to a :value event. It uses the

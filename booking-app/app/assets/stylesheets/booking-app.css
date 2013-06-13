@@ -502,7 +502,7 @@ input {
 #booking_form {
   margin-right: 10px;
   margin-top: 10px;
-  display: none;
+  /* display: none; */
   float: right;
 /*  background-color: red; */
   width: 400px;
@@ -589,4 +589,13 @@ input {
   @page { margin: 0.5cm; }
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
+}
+
+
+.invisible {
+  display: none;
+}
+
+.visible {
+  display: block;
 }
