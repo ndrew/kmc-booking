@@ -3,20 +3,36 @@
               [io.pedestal.app.messages :as msg]))
 
 
-(defn init-seats-transform [old-value message]
-  (:value message))
+(defn booking-transform-fn [state message]
+  (.log js/console "got transform message " (pr-str state) (pr-str message))
+  (let [t (msg/type message)]
+    (cond 
+      (= msg/init t) (do
+                       (.log js/console "init msg") 
+                       {:form-show false})
+      :show-form (do 
+             (.log js/console "add msg") 
+             ;(update-in state [:model-todos] conj (:value message))
+             state)
+      :else (do
+              (.log js/console "else") 
+              state
+              ))))
 
 
 (def booking-app
-  {:version 2
-   :transform [[:init-seats [:seats] init-seats-transform]]})
+  ;{:version 2
+  ; :transform [[:booking-form [:value] (fn[a b] (.log js/console "T R A N S F O R M !")) ]
+               ;[:init-seats [:seats] init-seats-transform]
+  ;             ]}
+  
+  {:transform 
+   {:booking {:init nil 
+              :fn booking-transform-fn}}})
 
 
-
-
-
-
-
+;{:transform {:todo {:init nil :fn todo-transform}}
+;                :emit {:emit {:fn todo-emit :input #{:todo}}}})
 
 ;; While creating new behavior, write tests to confirm that it is
 ;; correct. For examples of various kinds of tests, see

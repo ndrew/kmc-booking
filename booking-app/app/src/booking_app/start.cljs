@@ -22,31 +22,26 @@
  (events/send-on-click
    (dom/by-class "seat")
    input-queue
-   (fn []
-      (js/alert "click on the seat")
-                      
-                      ;(let [text-node (dom/by-id "todo-entry")
-                      ;      text (.-value text-node)]
-                      ;  (set! (.-value text-node) "")
-                      ;  [{msg/topic :todo msg/type :add :value text}])))
-                      ))
- 
-  ;(let [form (dom/by-id "todo-form")
-  ;      btn (dom/by-id "todo-add-button")]
-  ;  (.focus (dom/by-id "todo-entry"))
-    ;)
-  )
+   (fn [e]
+     (let [seat-el (.-currentTarget (.-evt e))
+           x (js/parseInt(dom/attr seat-el "x"))
+           y (js/parseInt(dom/attr seat-el "y"))]
+       
+       (.log js/console seat-el x y)
+       
+       [{msg/topic :booking msg/type :seat-selected :value [x y]}]       
+       ))))
 
 (defn bind-booking-form [input-queue]
   (events/send-on-click
-    (dom/by-id "pre_book") input-queue 
-    (fn []
-      (js/alert "pre_book")
+    (dom/by-id "pre_book")
+    input-queue
+    (fn [e]
+      (.log js/console (.-currentTarget (.-evt e)))
       
-      
-      [{msg/topic :booking-app 
-        msg/type :set-name :name "Alice" }]
-      ; return some message
+      [{msg/topic :booking 
+        msg/type :show-form 
+        :value true}]
       )))  
   
 
@@ -60,9 +55,6 @@
     ;; If services existed, configure the application to send all
     ;; effects there.
     ;; (app/consume-effect app services-fn)
-
-    (.log js/console (pr-str (keys app)))
-    
     ;; Start the application
     (app/begin app)
     
