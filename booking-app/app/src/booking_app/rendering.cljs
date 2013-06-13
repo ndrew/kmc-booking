@@ -5,9 +5,8 @@
             [io.pedestal.app.render.push.handlers.automatic :as d])
   (:require-macros [booking-app.html-templates :as html-templates]))
 
-;; Load templates.
 
-(def templates (html-templates/booking-app-templates))
+(def templates (html-templates/booking-app-templates))       ;; Load templates.
 
 ;; The way rendering is handled below is the result of using the
 ;; renderer provided in `io.pedestal.app.render`. The only requirement
@@ -54,51 +53,19 @@
 ;; referenced in config/config.clj and must be a function in order to
 ;; be used from the tool's "render" view.
 
-
-
-(defn render-app-page [renderer [_ path] transmitter]
-  (let [;; The renderer that we are using here helps us map changes to
-        ;; the UI tree to the DOM. It keeps a mapping of paths to DOM
-        ;; ids. The `get-parent-id` function will return the DOM id of
-        ;; the parent of the node at path. If the path is [:a :b :c]
-        ;; then this will find the id associated with [:a :b]. The
-        ;; root node [] is configured when we created the renderer.
-        parent (render/get-parent-id renderer path)
-        ;; Use the `new-id!` function to associate a new id to the
-        ;; given path. With two arguments, this function will generate
-        ;; a random unique id. With three arguments, the given id will
-        ;; be associated with the given path.
-        id (render/new-id! renderer path)
-        ;; Get the dynamic template named :booking-app-page
-        ;; from the templates map. The `add-template` function will
-        ;; associate this template with the node at
-        ;; path. `add-template` returns a function that can be called
-        ;; to generate the initial HTML.
-        html (templates/add-template renderer path (:booking-app-page templates))]
-    ;; Call the `html` function, passing the initial values for the
-    ;; template. This returns an HTML string which is then added to
-    ;; the DOM using Domina.
-    (dom/append! (dom/by-id parent) 
-                 (html {:id id :seats ""}))))
-
-
-
 (defn render-config []
   [;; All :node-create deltas for the node at :greeting will
    ;; be rendered by the `render-page` function. The node name
    ;; :greeting is a default name that is used when we don't
    ;; provide our own combines and emits. To name your own nodes,
    ;; create a custom combine or emit in the application's behavior.
-   [:node-create  [:init-seats] render-app-page]
-   
+   [:node-create  [:greeting] render-page]
    ;; All :node-destroy deltas for this path will be handled by the
    ;; library function `d/default-exit`.
-   ;[:node-destroy   [:greeting] d/default-exit]
+   [:node-destroy   [:greeting] d/default-exit]
    ;; All :value deltas for this path will be handled by the
    ;; function `render-message`.
-   ;[:value [:greeting] render-message]
-   
-])
+   [:value [:greeting] render-message]])
 
 ;; In render-config, paths can use wildcard keywords :* and :**. :*
 ;; means exactly one segment with any value. :** means 0 or more

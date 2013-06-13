@@ -49,7 +49,11 @@
 
 (defn home-page
   [request]
-  (ring-resp/response "Hello World!"))
+  {:status 200 
+   :headers {
+             "Content-Type" "text/html; charset=utf-8"
+             }
+   :body (slurp "public/index.html" :encoding "UTF-8")})
 
 
 (defn- authentication-text[s] 
@@ -66,22 +70,16 @@
    :body "Restricted!"})
 
 
-
 (defn admin-page [req] 
   {:status 200 
-   :headers {
-             "Content-Type" "text/html; charset=utf-8"
-             }
+   :headers {"Content-Type" "text/html; charset=utf-8"}
    :body "Hello Admin!"})
-
-
 
 
 (defn not-found-page [req] 
   {:status 200 
-   :headers {"Content-Type" "Content-Type: text/html; charset=utf-8"}
-   ; bad, but will work for sometime
-   :body (slurp "public/404.html")})
+   :headers {"Content-Type" "text/html; charset=utf-8"}
+   :body (slurp "public/404.html" :encoding "UTF-8")})
 
 
 
@@ -96,6 +94,7 @@
 
 
 (defn- session-id [] (.toString (java.util.UUID/randomUUID)))
+
 
 (definterceptor session-interceptor
   (middlewares/session {:store (cookie/cookie-store)}))
@@ -270,15 +269,15 @@
               ::bootstrap/interceptors [
                   bootstrap/log-request
                   ; tbd: remove this
-                  log-request
-                  log-response
+                  ;log-request
+                  ;log-response
                   
                   not-found
                   (route/router routes)
                   
-                  (middlewares/resource "public")
-;                  (middlewares/file-info)
-;                  (middlewares/file "public" {:index-files? false})
+;                  (middlewares/resource "public")
+                  (middlewares/file-info)
+                  (middlewares/file "public" {:index-files? false})
                   
                   ]
                   ;default-cache-control-to-no-cache
