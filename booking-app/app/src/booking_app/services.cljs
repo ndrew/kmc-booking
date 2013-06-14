@@ -71,11 +71,11 @@
                                   {msg/topic :booking
                                    msg/type :success
                                    :value args }
-                       )
-          
+                       ))
           ]
       (xhr/request (gensym)
                    "/booking"
+                   ;"http://localhost:3344/booking"
                    :request-method "POST"
                    :headers {"Content-Type" "application/edn"}
                    :body body

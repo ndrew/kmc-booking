@@ -1,6 +1,8 @@
 (ns booking-service.server
   (:gen-class) ; for -main method in uberjar
   (:require [booking-service.service :as service]
+            [booking-service.db :as db]
+            
             [io.pedestal.service.http :as bootstrap]))
 
 (def service-instance
@@ -14,6 +16,7 @@
                   (constantly (bootstrap/create-server (merge service/service opts)))))
 
 (defn -main [& args]
+  (db/start-db)
   (create-server)
   (bootstrap/start service-instance))
 

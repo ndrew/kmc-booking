@@ -11,7 +11,7 @@
 
 {:db/id #db/id[:db.part/db]
   :db/ident :customer/id
-  :db/valueType :db.type/long
+  :db/valueType :db.type/uuid
   :db/cardinality :db.cardinality/one
   :db/doc "A customer id"
   :db/unique :db.unique/identity
@@ -45,7 +45,7 @@
 
 {:db/id #db/id[:db.part/db]
   :db/ident :booking/id
-  :db/valueType :db.type/long
+  :db/valueType :db.type/uuid
   :db/cardinality :db.cardinality/one
   :db/doc "booking id"
   :db.install/_attribute :db.part/db}

@@ -18,7 +18,11 @@
             ;
             [ring.util.response :as ring-resp]
             [ring.middleware.session.cookie :as cookie]
-            [clojure.data.codec.base64 :as base64]))
+            [clojure.data.codec.base64 :as base64]
+            
+            [booking-service.db :as db]
+            
+            ))
 
 
 (defn- byte-transform
@@ -202,22 +206,44 @@
     (ring-resp/response ""))
            
            
-(defn dummy-post [req]
-  (println "FFFFFUUUU")
-  (bootstrap/edn-response [:xyj])
-)
+(defn do-booking [req]
+  ; (db/put-booking )
+  ; (println (pr-str req))
+  
+  (let [{{nm :name
+          tel  :tel
+          selected :selected} :edn-params} req
+        customer (db/store-customer nm tel)
+        ]
+    
+
+    (println "")
+    (println
+      (pr-str customer ))
+    (println "")
+        
+    (bootstrap/edn-response [:xyj])
+    ))
            
-           
+
+(defn booking-subcribe [req]
+ ; tbd subscribe
+  
+  (bootstrap/edn-response 
+    (db/get-seats-status)
+    )
+)           
+                      
            
            
 (defroutes routes
   [[["/"  ^:interceptors [session-interceptor]
      {:get home-page}]
     ["/booking"
-     ^:interceptors [dummy-interceptor] ; add data for request 
+     ;^:interceptors [dummy-interceptor] ; add data for request 
       
-      {:get admin-publish
-       :post dummy-post    
+      {:get booking-subcribe
+       :post do-booking    
       }
       ["/odmin" ^:interceptors [basic-auth ] {:get admin-subscribe}
           ["/all" {:get wait-for-events}]
@@ -232,6 +258,14 @@
 (defon-response default-cache-control-to-no-cache
   [response]
   (update-in response [:headers "Cache-Control"] #(or % "no-cache")))
+
+
+(defon-response cross-origin-ajax
+  [response]
+  (assoc response :headers
+    (merge (:headers response)
+           {"Access-Control-Allow-Origin" "*"
+            "Access-Control-Allow-Headers" "Origin, X-Requested-With, Content-Type, Accept"})))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -281,11 +315,13 @@
               ::bootstrap/routes routes
 
               ::bootstrap/interceptors [
+                  (body-params/body-params)
+                  
                   bootstrap/log-request
                   ; tbd: remove this
                   ;log-request
                   ;log-response
-                  
+                  cross-origin-ajax
                   not-found
                   
                   (middlewares/resource "public")
@@ -300,7 +336,6 @@
                   ;
                   ;servlet-interceptor/exception-debug
                   ;middlewares/cookies
-                  ;(middlewares/params)
                   ;(route/router routes)
                   ;bootstrap/not-found]
               

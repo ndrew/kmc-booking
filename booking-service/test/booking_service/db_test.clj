@@ -6,7 +6,10 @@
 ;(def uri "datomic:free://localhost:4334/test")
 (def uri "datomic:mem://hello")
 
-(deftest test-db-creation
+
+
+
+(comment (deftest test-db-creation
     
   (d/create-database uri)
   (def conn (d/connect uri))
@@ -102,3 +105,4 @@
   (println (pr-str booked-seats))
   
 )
+  )
