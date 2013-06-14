@@ -10,6 +10,7 @@
             
             [domina.events :as dom-event]
             [domina :as dom]
+            [domina.xpath :as dx]
             ))
 
 
@@ -44,19 +45,25 @@
       ; we don't care about node creation here
       (if (= :value (first d))
         (let [[_ [model] old-state new-state] d
-              show-form (get (last new-state) :form-show false)]
+              show-form (get new-state :form-show false)
+              
+              selected (get new-state :selected #{})
+              old-selected (get old-state :selected #{})
+              ]
           
           (render-form show-form)
           
-        )
-        
-        )
-      
-      )
-        
-    ; change init queue
-    
-    ))
+          
+          (doseq [[x y] (clojure.set/difference old-selected selected )]          
+            (dom/set-classes!
+              (dx/xpath (format "//*[@x='%d' and @y='%d']" x y)) "seat"))
+          
+          
+          (doseq [[x y] (clojure.set/difference selected old-selected)]
+            (dom/set-classes!
+              (dx/xpath (format "//*[@x='%d' and @y='%d']" x y)) ["seat" "seat_your"]))
+          
+          )))))
 
 
 
@@ -79,7 +86,7 @@
     (app/begin app)
     
     (let [input-queue (:input app)]
-      ;(behavior/bind-seats-form input-queue)
+      (behavior/bind-seats-form input-queue)
       (behavior/bind-booking-form input-queue))
 
       {:app app :app-model app-model}))

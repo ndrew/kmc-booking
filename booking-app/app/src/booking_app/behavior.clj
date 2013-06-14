@@ -16,9 +16,12 @@
    (fn [e]
      (let [seat-el (.-currentTarget (.-evt e))
            x (js/parseInt(dom/attr seat-el "x"))
-           y (js/parseInt(dom/attr seat-el "y"))]
-       
-       [{msg/topic :booking msg/type :seat-selected :value [x y]}]))))
+           y (js/parseInt(dom/attr seat-el "y"))
+           status (if (= #{"seat"} (set (dom/classes seat-el)))
+                    :free
+                    :taken)]
+              
+       [{msg/topic :booking msg/type :seat-selected :value [status [x y]]}]))))
 
 
 (defn bind-booking-form [input-queue]
@@ -52,30 +55,40 @@
                   (pr-str message))
   (let [t (msg/type message)]
     (cond 
-      (= msg/init t) (do
-                       (.log js/console "init msg") 
-                       (:value message)
-                       )
-      (= :show-form t ) (do 
-                          
-                          (.log js/console "add msg") 
-                          (merge state {:form-show (:value message)}))
+      (= msg/init t) (:value message)
       
-      (= :seat-selected t) (let [coord (:value message)]
-                             (js/alert (pr-str coord))
-                             (update-in state [:selected] conj coord)     
-                             )
+      (= :show-form t )  
+        (merge state
+               {:form-show (:value message)})
+                                
+      (= :book t) (do
+                    ; find out selected from state
+                    (.log js/console "previous state " (pr-str state))
+                    ; todo: merge with others
+                    {:form-show false}
+                    )
+
+      
+      (= :seat-selected t) (let [[status [x y]] (:value message)]
+                    
+                    (cond 
+                      (= :free status) (update-in state [:selected] conj [x y])  
+                      (= :taken status) (update-in state [:selected] disj [x y])  
+                      
+                      )
+                    )
       :else (do
-              (.log js/console "else") 
+              (.log js/console "message unknown") 
               state
               ))))
 
 
 ; Initial state of the application model. It's always a single tree.
 (def ^:private initial-app-model
-  [{:form-show false
-    :selected []
-    :booked []}])
+  {:form-show false
+    :selected #{}
+    :pending #{}
+    :booked #{}})
 
 
 (defn booking-emit
