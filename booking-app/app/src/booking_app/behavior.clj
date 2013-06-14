@@ -77,9 +77,7 @@
                {:form-show (:value message)})
                                 
       (= :book t) (do
-                    ; find out selected from state
                     ;(.log js/console "previous state " (pr-str state))
-                    
                     (if-not (:name message)
                         (assoc state :form-show false)
                         state))
@@ -100,7 +98,8 @@
                       )
       
       (= :success t) (do 
-        (.log js/console "success" (pr-str message)) 
+        (js/alert (str "Заброньовано! Код бронювання: " (:booking-id (:value message))))
+        ;(.log js/console "success" (pr-str message)) 
         
         state 
       )

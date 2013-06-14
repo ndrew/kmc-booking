@@ -66,12 +66,22 @@
                    ))
           
           success-fn (fn[args] 
-                       (log args)
-                       (p/put-message i-q 
-                                  {msg/topic :booking
-                                   msg/type :success
-                                   :value args }
-                       ))
+                       (let [{body :body} args
+                             resp (cljs.reader/read-string body)
+                             {status :status} resp]
+                            
+                            (if (= :ok status)
+                              (p/put-message i-q 
+                                  {msg/topic :booking msg/type :success :value resp })
+                              (do 
+                                (js/alert "Помилка букінга")
+                                
+                                )
+                              )
+                         
+                         )
+                       
+                       )
           ]
       (xhr/request (gensym)
                    "/booking"
