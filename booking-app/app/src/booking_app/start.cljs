@@ -8,11 +8,15 @@
             [booking-app.behavior :as behavior]
             [booking-app.rendering :as rendering]
             
+            [booking-app.services :as services]
+            
             [domina.events :as dom-event]
             [domina :as dom]
             [domina.xpath :as dx]
 
             [clojure.set :as set]
+            
+            
             ))
 
 
@@ -72,8 +76,14 @@
 (defn booking-renderer [] ; do we really need this?
   (fn [deltas input-queue]
     (.log js/console "on render: " (pr-str deltas) (pr-str input-queue))
-    (doseq [d deltas]
-      (.log js/console "delta " (pr-str d))
+
+    
+    
+    
+    ;{msg/topic :booking msg/type :seat-selected :value [status [x y]]}
+    
+        (doseq [d deltas]
+      ;(.log js/console "delta " (pr-str d))
       ; we don't care about node creation here
       (if (= :value (first d))
         (let [[_ [model] old-state new-state] d
@@ -83,7 +93,10 @@
           (render-seats old-state new-state)
           
           
-          )))))
+          )
+        
+        
+        ))))
 
 
 
@@ -100,7 +113,9 @@
         app-model (render/consume-app-model app render-fn)]
     ;; If services existed, configure the application to send all
     ;; effects there.
-    ;; (app/consume-effect app services-fn)
+    
+    ; todo: start services here for long polling
+    (app/consume-output app services/services-fn)
 
     ;; Start the application
     (app/begin app)

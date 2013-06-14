@@ -1,4 +1,89 @@
-(ns booking-app.services)
+(ns booking-app.services
+  (:require [cljs.reader :as r]
+            [io.pedestal.app.net.xhr :as xhr]
+            [io.pedestal.app.protocols :as p]
+            [io.pedestal.app.messages :as msg]
+            [io.pedestal.app.util.log :as log]))
+
+
+
+(defn receive-messages [app]
+;  (p/put-message (:input app) {msg/topic :inbound
+;                 msg/type :received
+;                 :text (str "incoming message " (gensym))
+;                 :nickname (str (gensym))
+;                 :id (util/random-id)})
+;  (.setTimeout js/window (fn [] (receive-messages app)) 10000)
+)
+
+
+
+(defrecord Services [app]
+  p/Activity
+  (start [this]
+    (let [source (js/EventSource. "/booking")]
+      ; todo
+      (.addEventListener source
+                         "msg"
+                         (fn [e]
+                           ;(let [data (r/read-string (.-data e))]
+                           ;  (.log js/console e)
+                           ;  (p/put-message (:input app)
+                           ;                 {msg/topic :inbound
+                           ;                  msg/type :received
+                           ;                  :value 
+                            ;                 {}))) ; TODO: track msg id throughout the system
+                         false)
+      (.addEventListener source
+                         "open"
+                         (fn [e]
+                           (.log js/console e))
+                         false)
+      (.addEventListener source
+                         "error"
+                         (fn [e]
+                           (.log js/console e))
+                         false)
+      (.log js/console source)))
+  (stop [this])))
+
+
+(defn services-fn [message i-q]
+  (when-let [msg (msg/topic message) ]
+    (let [body (pr-str 
+                 (:value message)
+                 ;{:text (:text msg) :nickname (:nickname msg)}
+                 )
+          log (fn [args]
+                (.log js/console (pr-str args))
+                (.log js/console (:xhr args)))
+          err-fn (fn [args]
+                   (p/put-message i-q 
+                                  {msg/topic :booking
+                                   msg/type :failed
+                                   :value args }
+                   
+                   ))
+          
+          success-fn (fn[args] 
+                       (log args)
+                       (p/put-message i-q 
+                                  {msg/topic :booking
+                                   msg/type :success
+                                   :value args }
+                       )
+          
+          ]
+      (xhr/request (gensym)
+                   "/booking"
+                   :request-method "POST"
+                   :headers {"Content-Type" "application/edn"}
+                   :body body
+                   :on-success success-fn
+                   :on-error err-fn))
+    (.log js/console (str "Send to Server: " (pr-str message)))))
+
+
 
 ;; The services namespace responsible for communicating with back-end
 ;; services. It receives messages from the application's behavior,

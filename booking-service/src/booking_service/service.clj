@@ -53,7 +53,9 @@
    :headers {
              "Content-Type" "text/html; charset=utf-8"
              }
-   :body (slurp "public/index.html" :encoding "UTF-8")})
+   :body (slurp "public/booking-app.html"
+           ; "public/index.html"
+            :encoding "UTF-8")})
 
 
 (defn- authentication-text[s] 
@@ -199,12 +201,24 @@
                          (pr-str msg-data)))
     (ring-resp/response ""))
            
+           
+(defn dummy-post [req]
+  (println "FFFFFUUUU")
+  (bootstrap/edn-response [:xyj])
+)
+           
+           
+           
+           
 (defroutes routes
-  [[["/"
+  [[["/"  ^:interceptors [session-interceptor]
      {:get home-page}]
     ["/booking"
-     ^:interceptors [dummy-interceptor session-interceptor] ; add data for request 
-      ["/test-add" {:get admin-publish}]
+     ^:interceptors [dummy-interceptor] ; add data for request 
+      
+      {:get admin-publish
+       :post dummy-post    
+      }
       ["/odmin" ^:interceptors [basic-auth ] {:get admin-subscribe}
           ["/all" {:get wait-for-events}]
      ]]]])
@@ -273,11 +287,13 @@
                   ;log-response
                   
                   not-found
-                  (route/router routes)
                   
-;                  (middlewares/resource "public")
+                  (middlewares/resource "public")
                   (middlewares/file-info)
                   (middlewares/file "public" {:index-files? false})
+
+                  
+                  (route/router routes)
                   
                   ]
                   ;default-cache-control-to-no-cache
