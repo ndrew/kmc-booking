@@ -48,84 +48,77 @@
   (stop [this])))
 
 
-(defn services-fn [message i-q]
-  (when-let [msg (msg/topic message) ]
-    (let [body (pr-str 
-                 (:value message)
-                 ;{:text (:text msg) :nickname (:nickname msg)}
-                 )
-          log (fn [args]
+(defn- book-fn [message i-q]
+  (let [body (pr-str (:value message))
+        log (fn [args]
                 (.log js/console (pr-str args))
                 (.log js/console (:xhr args)))
-          err-fn (fn [args]
-                   (p/put-message i-q 
-                                  {msg/topic :booking
-                                   msg/type :failed
-                                   :value args }
-                   
-                   ))
-          
-          success-fn (fn[args] 
-                       (let [{body :body} args
-                             resp (cljs.reader/read-string body)
-                             {status :status} resp]
-                            
-                            (if (= :ok status)
-                              (p/put-message i-q 
-                                  {msg/topic :booking msg/type :success :value resp })
-                              (do 
-                                (js/alert "Помилка букінга")
-                                
-                                )
-                              )
-                         
-                         )
-                       
-                       )
-          ]
+        err-fn (fn [args]
+                 (p/put-message i-q 
+                                {msg/topic :booking
+                                 msg/type :failed
+                                 :value args}))
+        success-fn (fn[args] 
+                     (let [{body :body} args
+                           resp (cljs.reader/read-string body)
+                           {status :status} resp]
+                       (if (= :ok status)
+                         (p/put-message i-q 
+                                        {msg/topic :booking msg/type :success :value resp })
+                         (do 
+                           (js/alert "Помилка букінга")))))]
       (xhr/request (gensym)
                    "/booking"
-                   ;"http://localhost:3344/booking"
+                    ;"http://localhost:3344/booking"
                    :request-method "POST"
                    :headers {"Content-Type" "application/edn"}
                    :body body
                    :on-success success-fn
                    :on-error err-fn))
-    (.log js/console (str "Send to Server: " (pr-str message)))))
+    
+;    (.log js/console (str "Send to Server: " (pr-str message)))
+)
 
 
+(defn- refresh-fn [message i-q]
+  (let [body (pr-str (:value message))
+        log (fn [args]
+                (.log js/console (pr-str args))
+                (.log js/console (:xhr args)))
+        err-fn (fn [args]
+                 (p/put-message i-q 
+                                {msg/topic :refresh
+                                 msg/type :failed
+                                 :value args}))
+        success-fn (fn[args] 
+                     (let [{body :body} args
+                           resp (cljs.reader/read-string body)
+                           {status :status} resp]
+                       (if (= :ok status)
+                         (p/put-message i-q 
+                                        {msg/topic :refresh msg/type :success :value args })
+                         (do 
+                           (js/alert "Помилка оновлення"))))
+                     
+                     )]
+      (xhr/request (gensym)
+                   "/booking"
+                  ;"http://localhost:3344/booking"
+                   :request-method "GET"
+                   :headers {"Content-Type" "application/edn"}
+                   :body body
+                   :on-success success-fn
+                   :on-error err-fn))
+)
 
-;; The services namespace responsible for communicating with back-end
-;; services. It receives messages from the application's behavior,
-;; makes requests to services and sends responses back to the
-;; behavior.
-;;
-;; This namespace will usually contain a function which can be
-;; configured to receive effect events from the behavior in the file
-;;
-;; app/src/booking_app/start.cljs
-;;
-;; After creating a new application, set the effect handler function
-;; to receive effect
-;;
-;; (app/consume-effect app services-fn)
-;;
-;; A very simple example of a services function which echos all events
-;; back to the behavior is shown below
 
-(comment
-
-  ;; The services implementation will need some way to send messages
-  ;; back to the application. The queue passed to the services function
-  ;; will convey messages to the application.
-  (defn echo-services-fn [message queue]
-    (put-message queue message))
+(defn services-fn [message i-q]
+  (.log js/console "service call for message " (pr-str message))
   
-  )
-
-;; During development, it is helpful to implement services which
-;; simulate communication with the real services. This implementaiton
-;; can be placed in the file
-;;
-;; app/src/booking_app/simulated/services.cljs
-;;
+  (when-let [msg (msg/type message) ]
+    (cond 
+      (= msg/init msg)  (refresh-fn message i-q)
+      (= :book msg)     (book-fn message i-q)
+      (= :refresh msg)  (refresh-fn message i-q)
+      )
+    ))

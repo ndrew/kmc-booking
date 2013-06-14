@@ -5,10 +5,7 @@
               [io.pedestal.app.render.events :as events]
             
               [domina.events :as dom-event]
-              [domina :as dom]
-              
-              
-              ))
+              [domina :as dom]))
 
 
 
@@ -65,9 +62,7 @@
 
 
 (defn booking-transform-fn [state message]
-  ;(.log js/console "got transform message " 
-  ;                (pr-str state)
-  ;                (pr-str message))
+  (.log js/console "got transform message " (pr-str message))
   (let [t (msg/type message)]
     (cond 
       (= msg/init t) (:value message)
@@ -101,7 +96,10 @@
         (js/alert (str "Заброньовано! Код бронювання: " (:booking-id (:value message))))
         ;(.log js/console "success" (pr-str message)) 
         
-        state 
+        ; push update-message
+        
+        (assoc state :selected #{})
+         
       )
       :else (do
               (.log js/console "message unknown") 
@@ -112,9 +110,9 @@
 ; Initial state of the application model. It's always a single tree.
 (def ^:private initial-app-model
   {:form-show false
-    :selected #{}
-    :pending #{}
-    :booked #{}})
+   :selected #{}
+   :pending #{}
+   :booked #{}})
 
 
 ; TODO: not working, using default
@@ -133,14 +131,43 @@
   )
 
 
-(defn booking-effect [message old-model new-model]
+(defn booking-effect [message old-model new-model]  
+  (.log js/console "got effect message " (pr-str message))
+
+  (cond 
+    ; booking
+    (= :book (msg/type message)) [{msg/topic :booking 
+                                   msg/type :book 
+                                   :value (:value message)}
+                                  
+                                  {msg/topic :booking 
+                                   msg/type :refresh 
+                                   :value (:value message)}]
+    
+    ; initialization
+    (= msg/init (msg/type message)) [{msg/topic :booking 
+                                      msg/type :refresh 
+                                      :value (:value message)}]
+    
+    ; refresh 
+    (= :refresh (msg/type message)) [{msg/topic :booking 
+                                      msg/type :refresh 
+                                      :value (:value message)}]
+      
+    :else []
+  ))
   
-  (if (= :book (msg/type message) )
-    [{msg/topic :booking 
-      msg/type :book
-      :value (:value message)}]
-    []
-    ))
+  
+  ;(let [msgs (if (:refresh new-model)
+  ;             [{msg/topic :booking 
+  ;               msg/type :refresh 
+  ;               :value (:value message)}] [])]
+  ;  
+  ;  (conj msgs (if (= :book (msg/type message))
+  ;          {msg/topic :booking 
+  ;           msg/type :book 
+  ;           :value (:value message)}))))
+  
 
 
 (def booking-app

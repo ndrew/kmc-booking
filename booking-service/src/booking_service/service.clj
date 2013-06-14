@@ -229,7 +229,11 @@
  ; tbd subscribe
   
   (bootstrap/edn-response 
-    (db/get-seats-status)
+    {
+     :status :ok
+     ;
+     :seats (db/get-seats-status)
+     } 
     )
 )           
                       
@@ -264,7 +268,8 @@
   (assoc response :headers
     (merge (:headers response)
            {"Access-Control-Allow-Origin" "*"
-            "Access-Control-Allow-Headers" "Origin, X-Requested-With, Content-Type, Accept"})))
+            "Access-Control-Allow-Headers" "Origin, X-Requested-With, Content-Type, Accept"
+            "Access-Control-Request-Method" "POST, GET"})))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;

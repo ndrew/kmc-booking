@@ -75,14 +75,12 @@
 
 (defn booking-renderer [] ; do we really need this?
   (fn [deltas input-queue]
-    (.log js/console "on render: " (pr-str deltas) (pr-str input-queue))
+    ; (.log js/console "on render: " (pr-str deltas) (pr-str input-queue))
 
-    
-    
     
     ;{msg/topic :booking msg/type :seat-selected :value [status [x y]]}
     
-        (doseq [d deltas]
+    (doseq [d deltas]
       ;(.log js/console "delta " (pr-str d))
       ; we don't care about node creation here
       (if (= :value (first d))
