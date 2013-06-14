@@ -227,15 +227,23 @@
 
 (defn booking-subcribe [req]
  ; tbd subscribe
-  
+  (let [seats (db/get-seats-status)
+        seats-map (reduce (fn[a b] 
+                            (let [[id _ _ _ status] b
+                                  ui-status (cond 
+                                              (= status :booking.status/pre-booked) :pending
+                                              (= status :booking.status/pre-booked) :booked
+                                              :else :pending)]
+                              (assoc a ui-status (conj (get a ui-status)                                                        
+                                                       (vec 
+                                                         (map read-string 
+                                                              (clojure.string/split (name id) #"_"))))))) 
+                          {:selected #{}
+                           :pending #{}
+                           :booked #{}} seats)]
+    
   (bootstrap/edn-response 
-    {
-     :status :ok
-     ;
-     :seats (db/get-seats-status)
-     } 
-    )
-)           
+    {:status :ok :seats seats-map})))           
                       
            
            
