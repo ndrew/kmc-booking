@@ -9,6 +9,16 @@
 
 
 
+
+(defn- get-seat-status [seat-classes]
+  (let [s (set seat-classes)]
+    (cond 
+      (= #{"seat"} s) :free
+      (= #{"seat" "seat_pending"} s) :pending
+      (= #{"seat" "seat_booked"} s) :booked
+      :else :pending)))
+
+
 (defn bind-seats-form [input-queue]
  (events/send-on-click
    (dom/by-class "seat")
@@ -17,9 +27,8 @@
      (let [seat-el (.-currentTarget (.-evt e))
            x (js/parseInt(dom/attr seat-el "x"))
            y (js/parseInt(dom/attr seat-el "y"))
-           status (if (= #{"seat"} (set (dom/classes seat-el)))
-                    :free
-                    :taken)]
+           status (get-seat-status (dom/classes seat-el))
+           ]
               
        [{msg/topic :booking msg/type :seat-selected :value [status [x y]]}]))))
 
@@ -73,7 +82,7 @@
                     
                     (cond 
                       (= :free status) (update-in state [:selected] conj [x y])  
-                      (= :taken status) (update-in state [:selected] disj [x y])  
+                      :else (update-in state [:selected] disj [x y])  
                       
                       )
                     )

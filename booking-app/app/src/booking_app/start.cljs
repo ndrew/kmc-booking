@@ -11,6 +11,8 @@
             [domina.events :as dom-event]
             [domina :as dom]
             [domina.xpath :as dx]
+
+            [clojure.set :as set]
             ))
 
 
@@ -37,6 +39,36 @@
 )
 
 
+(defn- toggle-seats-class [seats cl]
+  (doseq [[x y] seats]
+    (dom/set-classes!
+      (dx/xpath (format "//*[@x='%d' and @y='%d']" x y)) cl)))
+
+
+(defn render-seats [old-state new-state]
+  (let [selected (get new-state :selected #{})
+        old-selected (get old-state :selected #{})
+        
+        pending (get new-state :pending #{})
+        old-pending (get old-state :pending #{})
+          
+        booked (get new-state :booked #{})
+        old-booked (get old-state :booked #{})]
+    
+      (toggle-seats-class (set/difference booked old-booked) ["seat" "seat_booked"])
+      (toggle-seats-class (set/difference old-booked booked) ["seat"])
+      
+      (toggle-seats-class (set/difference pending old-pending) ["seat" "seat_pending"])
+      (toggle-seats-class (set/difference old-pending pending) ["seat"])
+
+      
+      (toggle-seats-class (set/difference selected old-selected) ["seat" "seat_your"])
+      (toggle-seats-class (set/difference old-selected selected) ["seat"])
+
+          
+    ))
+
+
 (defn booking-renderer [] ; do we really need this?
   (fn [deltas input-queue]
     (.log js/console "on render: " (pr-str deltas) (pr-str input-queue))
@@ -45,23 +77,11 @@
       ; we don't care about node creation here
       (if (= :value (first d))
         (let [[_ [model] old-state new-state] d
-              show-form (get new-state :form-show false)
-              
-              selected (get new-state :selected #{})
-              old-selected (get old-state :selected #{})
-              ]
+              show-form (get new-state :form-show false)]
           
           (render-form show-form)
+          (render-seats old-state new-state)
           
-          
-          (doseq [[x y] (clojure.set/difference old-selected selected )]          
-            (dom/set-classes!
-              (dx/xpath (format "//*[@x='%d' and @y='%d']" x y)) "seat"))
-          
-          
-          (doseq [[x y] (clojure.set/difference selected old-selected)]
-            (dom/set-classes!
-              (dx/xpath (format "//*[@x='%d' and @y='%d']" x y)) ["seat" "seat_your"]))
           
           )))))
 
