@@ -20,9 +20,7 @@
             [ring.middleware.session.cookie :as cookie]
             [clojure.data.codec.base64 :as base64]
             
-            [booking-service.db :as db]
-            
-            ))
+            [booking-service.db :as db]))
 
 
 (defn- byte-transform
@@ -213,16 +211,17 @@
   (let [{{nm :name
           tel  :tel
           selected :selected} :edn-params} req
-        customer (db/store-customer nm tel)
-        ]
-    
 
-    (println "")
-    (println
-      (pr-str customer ))
-    (println "")
-        
-    (bootstrap/edn-response [:xyj])
+          seat-ids (map #(let[[x y] %] (keyword (str x "_" y))) selected)
+          customer-id (db/store-customer nm tel)
+    
+          booking-id (db/store-booking customer-id seat-ids)
+        ]
+            
+    (bootstrap/edn-response {:status :ok
+                             :customer-id customer-id
+                             :booking-id booking-id
+                             })
     ))
            
 
