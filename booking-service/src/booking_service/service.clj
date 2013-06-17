@@ -51,13 +51,27 @@
 
 (defn home-page
   [request]
+ 
+   (println (pr-str request)) 
+
   {:status 200 
    :headers {
              "Content-Type" "text/html; charset=utf-8"
              }
-   :body (slurp "public/booking-app.html"
-           ; "public/index.html"
-            :encoding "UTF-8")})
+   
+   :body (if (= (:query-string request) "ive-mode-on")
+           (do 
+             (println "=============")
+             (println " IVE MODE ON")
+             (println "=============")
+             
+           (clojure.string/replace (slurp "public/booking-app.html" :encoding "UTF-8") 
+                                   #"booking-app.css" "ive.css"))
+           
+           (slurp "public/booking-app.html" :encoding "UTF-8")
+           )
+   
+          })
 
 
 (defn- authentication-text[s] 

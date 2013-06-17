@@ -22,7 +22,7 @@
                  [org.clojure/data.codec "0.1.0"]]
   :profiles {:dev {:source-paths ["dev"]}}
   :min-lein-version "2.0.0"
-  :resource-paths ["config", "resources"]
+  :resource-paths ["config", "resources", "public"]
   :main ^{:skip-aot true} booking-service.server)
 
 

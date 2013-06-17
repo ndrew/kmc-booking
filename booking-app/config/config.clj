@@ -9,7 +9,35 @@
 (def configs
   ;; One project can host multiple applications. The top-level of the
   ;; config map contains one entry for each appliction.
-  {:booking-app
+  {
+   ;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;
+   ;;
+   :admin-app {
+      :build {:watch-files (compile/html-files-in "app/templates")
+              :triggers {:html [#"booking_app/rendering.js"]}}
+      :application {:generated-javascript "generated-js"
+                  :default-template "application.html"
+                  :output-root :public}
+      :aspects {
+                :development {:uri "/admin-app-dev.html"
+                              :name "Development"
+                            :out-file "addmin-app-dev.js"
+                            :main 'booking-app.admin.start
+                            :logging? true
+                            :order 0}
+                :production {:uri "/admin-app.html"
+                           :name "Production"
+                           :optimizations :advanced
+                           :out-file "admin-app.js"
+                           :main 'booking-app.admin.start
+                           :order 1}
+                }
+      }
+   ;;;;;;;;;;;;;;;;;;;;;;;;
+   ;;
+   ;;
+   :booking-app
    {;; :build contains parameters which are passed to the build
     :build {;; :watch-files contains a list of files to watch for
             ;; changes. Each file had a tag associated with it, in

@@ -1,6 +1,7 @@
 (ns dev
   (:use [cljs.repl :only [repl]]
-        [cljs.repl.browser :only [repl-env]])
+        [cljs.repl.browser :only [repl-env]]
+        [clojure.tools.namespace.repl :only (refresh)])
   (:require [io.pedestal.app-tools.server :as server]
             [io.pedestal.app-tools.build :as build]
             [io.pedestal.app-tools.compile.repl :as repl]
@@ -26,17 +27,6 @@
   []
   (repl (repl-env)))
 
-(defn start
-  "Start the current application development server."
-  []
-  ((:start-fn app-development-server))
-  :ok)
-
-(defn stop
-  "Stop the current application development server."
-  []
-  ((:stop-fn app-development-server)))
-
 (defn init
   "Create a new app development server and ensure that required
   directories exist."
@@ -49,15 +39,21 @@
                                             (server/app-development-server
                                              port (get config/configs config-name)))))
 
-(defn run
+(defn start
   "Initialize and start an application development web server. The
   server will serve one application at a time. The default port is
-  3000. The default application is :booking-app."
+  3000. The default application is the first of config/configs."
   ([]
-     (run 3000 :booking-app))
+     (start 3000 (ffirst config/configs)))
   ([port config-name]
      (init port config-name)
-     (start)))
+     ((:start-fn app-development-server))
+     :ok))
+
+(defn stop
+  "Stop the current application development server."
+  []
+  ((:stop-fn app-development-server)))
 
 (def ^{:doc "Compile JavaScript for this project. Pass an applicaiton name to compile
   all aspects of an application."}
@@ -113,13 +109,35 @@
   "Show basic help for each function in this namespace."
   []
   (println)
-  (println "Start a new app development server with (run) or (run port config)")
+  (println "Start a new app development server with (start) or (start port config)")
   (println "Type (cljs-repl) to start a ClojureScript REPL")
   (println "----")
-  (println "Type (init port) or (init port config) to create a app development server")
-  (println "Type (start) to start the current server")
+  (println "Type (start) or (start port config) to initialize and start a server")
   (println "Type (stop) to stop the current server")
   (println "----")
   (println "Type (watch aspect) to build a specific aspect when it changes")
   (println "Type (unwatch) to stop the current watcher")
   (println))
+
+
+(defn run-booking
+  "Initialize and start an application development web server. The
+  server will serve one application at a time. The default port is
+  3000. The default application is :booking-app."
+  ([]
+     (run-booking 3000 :booking-app))
+  ([port config-name]
+     (init port config-name)
+     (start)))
+
+
+(defn run-admin
+  "Initialize and start an application development web server. The
+  server will serve one application at a time. The default port is
+  3000. The default application is :booking-app."
+  ([]
+     (run-admin 3000 :admin-app))
+  ([port config-name]
+     (init port config-name)
+     (start)))
+

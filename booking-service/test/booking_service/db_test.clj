@@ -51,9 +51,7 @@
   (println (str "test seat is " test-seat-id ))
 
    (def test-seat-id-1 (ffirst 
-                      (q '[:find ?s
-                           :where [?s :seats/id :1_2]]
-                         (db conn))))
+                      (q '[:find ?s :where [?s :seats/id :1_2]] (db conn))))
  
   
   ;; add customers
