@@ -91,7 +91,7 @@
 (defn admin-page [req] 
   {:status 200 
    :headers {"Content-Type" "text/html; charset=utf-8"}
-   :body "Hello Admin!"})
+   :body (slurp "public/admin-app.html" :encoding "UTF-8")})
 
 
 (defn not-found-page [req] 
@@ -174,7 +174,10 @@
            (update-in [:cookies] merge cookie))))
 
 
-(def admin-subscribe (partial subscribe-for "admin-session" ::wait-for-events))
+(defn admin-subscribe [request]
+  
+  )
+;(def admin-subscribe (partial subscribe-for "admin-session" ::wait-for-events))
 
 (def wait-for-events (sse-setup (partial add-subscriber "admin-session")))
 
@@ -271,7 +274,10 @@
        :post do-booking    
       }
       ["/odmin" ^:interceptors [basic-auth ] {:get admin-subscribe}
-          ["/all" {:get wait-for-events}]
+          ["/all" 
+           {:get admin-page}
+           ;{:get wait-for-events}
+           ]
      ]]]])
 
 
