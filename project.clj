@@ -12,7 +12,21 @@
                  [rum "0.2.6"]
                  [ring/ring-core "1.3.1"]
                  [ring/ring-jetty-adapter "1.3.1"]
+
+                 [org.clojure/java.jdbc "0.3.6"]
+                 [org.postgresql/postgresql "9.2-1002-jdbc4"]
+                 ;[korma "0.4.0"]
+                 [c3p0/c3p0 "0.9.1.2"]
                  ]
+
+  :jvm-opts ["-server"
+             "-Xms1024m"
+             "-Xmx2048m"
+             "-XX:PermSize=64M"
+             "-XX:MaxPermSize=256M"
+             ]
+
+
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-figwheel "0.2.5-SNAPSHOT"]]
@@ -20,7 +34,7 @@
   :source-paths ["src"]
 
   :clean-targets ^{:protect false} ["resources/public/js/compiled"]
-  
+
   :cljsbuild {
     :builds [{:id "dev"
               :source-paths ["src" "dev_src"]
@@ -35,14 +49,14 @@
              {:id "min"
               :source-paths ["src"]
               :compiler {:output-to "resources/public/js/compiled/kmc_booking.js"
-                         :main kmc-booking.core                         
+                         :main kmc-booking.core
                          :optimizations :advanced
                          :pretty-print false
                          :warnings {:single-segment-namespace false}
                          }}]}
 
   :figwheel {
-             :http-server-root "public" ;; default and assumes "resources" 
+             :http-server-root "public" ;; default and assumes "resources"
              :server-port 3449 ;; default
              :css-dirs ["resources/public/css"] ;; watch and update CSS
 
@@ -68,7 +82,7 @@
              ;; :repl false
 
              ;; to configure a different figwheel logfile path
-             ;; :server-logfile "tmp/logs/figwheel-logfile.log" 
+             ;; :server-logfile "tmp/logs/figwheel-logfile.log"
              }
 
 :ring {:handler kmc-booking.server/app

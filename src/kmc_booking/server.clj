@@ -5,12 +5,13 @@
 
 (defn handler [request]
   (case (:uri request)
-    "/"
-    (redirect "/index.html")
+    "/" (redirect "/index.html")
+    
     "/welcome-message"
     {:status  200
      :headers {"Content-Type" "text/html"}
      :body    "Hello world from server!"}
+    
     {:status  404
      :headers {"Content-Type" "text/html"}
      :body    (str "Cannot find:" (:uri request))}))
