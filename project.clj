@@ -9,6 +9,7 @@
                  [ring/ring-jetty-adapter "1.2.1"]
                  [compojure "1.1.6"]
                  [hiccup "1.0.4"]]
+  :min-lein-version "2.0.0"
   :main ^:skip-aot kmc-booking.web
   :uberjar-name "kmc-booking-standalone.jar"
   :profiles {:uberjar {:aot :all}})
