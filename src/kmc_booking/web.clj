@@ -14,6 +14,15 @@
 
 (def application (handler/site routes))
 
+(defn init[] 
+  ;; 
+  )
+
+(defn destroy[] 
+  ;; 
+  )
+
+
 (defn start [port]
   (ring/run-jetty application {:port port
                                :join? false}))
