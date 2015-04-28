@@ -3,14 +3,14 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/java.jdbc "0.3.2"]
-                 [postgresql "9.1-901.jdbc4"]
-                 [ring/ring-jetty-adapter "1.2.1"]
-                 [compojure "1.1.6"]
-                 [hiccup "1.0.4"]]
+  :dependencies [[org.clojure/clojure "1.7.0-beta2"]
+                 [org.clojure/java.jdbc "0.3.6"]
+                 [postgresql "9.3-1102.jdbc41"]
+                 [ring/ring-jetty-adapter "1.4.0-beta1"]
+                 [compojure "1.3.3"]
+                 [hiccup "1.0.5"]]
 
-  :plugins [[lein-ring "0.8.12"]]
+  :plugins [[lein-ring "0.9.3"]]
   :ring {:handler kmc-booking.web/application
          :init    kmc-booking.web/init
         :destroy  kmc-booking.web/destroy}
