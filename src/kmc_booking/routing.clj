@@ -14,4 +14,9 @@
 	)
 
 (defroutes routes
-  (GET  "/" [] (index)))
+  (GET  "/" [] (index))
+  (GET "/welcome-message" []
+    {:status  200
+     :headers {"Content-Type" "text/html"}
+     :body    "Hello world from server!"})
+  )
