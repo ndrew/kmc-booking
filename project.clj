@@ -13,12 +13,15 @@
 
                  [org.clojure/clojurescript "0.0-3211"]
 
+
+                 [lein-figwheel "0.3.1"]
+ 
                  ]
 
   :plugins [
     [lein-ring "0.9.3"]
     [lein-cljsbuild "1.0.5"]
-    [lein-figwheel "0.2.5"]
+    [lein-figwheel "0.3.1"]
     ]
 
   :ring {:handler kmc-booking.web/application
@@ -55,6 +58,8 @@
         :builds [
           { :id "dev"
             :source-paths ["src-cljs"]
+
+            :figwheel { :on-jsload "kmc-booking.core/start" }
             :compiler {
               :output-to     "resources/public/booking.js"
               :output-dir    "resources/public/out"
