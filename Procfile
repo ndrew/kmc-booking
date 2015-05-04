@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -jar target/kmc-booking-standalone.jar
+web: lein do clean, cljsbuild once prod, uberjar && java $JVM_OPTS -jar target/kmc-booking-standalone.jar
