@@ -11,3 +11,7 @@ pom.xml.asc
 .hg/
 /db
 logfile
+/resources/public/out/*
+/resources/public/booking.min.js
+/resources/public/booking.js
+.DS_Store
