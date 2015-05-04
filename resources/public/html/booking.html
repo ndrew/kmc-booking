@@ -24,6 +24,15 @@
         <script type="text/javascript" src="xpath.js"></script>
         <![endif]-->
 
+<!-- dev -->
+    <script src="/out/goog/base.js" type="text/javascript"></script>
+    <script src="/booking.js" type="text/javascript"></script>
+    <script type="text/javascript">goog.require("kmc_booking.core");</script>
+    
+
+<!-- prod 
+    <script src="/booking.min.js" type="text/javascript"></script> -->
+
   </head>
 
   <body>
@@ -94,6 +103,12 @@
 
 </div>
     </div> <!-- /container -->
+
+    <script type="text/javascript">
+    window.onload = function() { 
+      kmc_booking.core.start(); 
+    };
+    </script>
 
     <script id="script-driver"></script>
 
