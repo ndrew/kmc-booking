@@ -15,3 +15,4 @@ logfile
 /resources/public/booking.min.js
 /resources/public/booking.js
 .DS_Store
+figwheel_server.log
