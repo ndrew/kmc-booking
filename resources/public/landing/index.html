@@ -69,8 +69,14 @@ body {
 
 
 p {
-	line-height: 200%;
+	line-height: 150%;
 	font-size: 1.5rem;
+
+	width: 75vw;
+	margin: 0 auto;
+
+	padding-top: 1rem;
+
 
 -ms-word-break: keep-all;
      word-break: keep-all;
@@ -88,13 +94,6 @@ p {
 
 }
 
-p {
-	width: 75vw;
-	margin: 0 auto;
-
-	padding-top: 1rem;
-
-}
 
 .sponsors-block {
 	background-color: rgba(128, 128, 128, 0.05);
@@ -124,7 +123,7 @@ p {
 	height: auto;
 	width: 180px;
 	margin: 1rem;
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 .sponsors-block h1 {
@@ -143,9 +142,11 @@ h1 {
 	padding: 1rem;
 }
 
+
+
 .misses div {
-	width: 30%;
-	max-width: 30%;
+	width: 27%;
+	max-width: 27%;
 	height: 45vw;
 
 	/*height: auto; */
@@ -165,40 +166,43 @@ h1 {
 	-webkit-transition: background-image .75s ease-in-out;
 	transition: background-image .75s ease-in-out;
 
+	margin-right: 1%;
+	margin-bottom: 1%;
+
 }
 
-.misses div:hover {
+/*.misses div:hover {
 	-webkit-transition: background-image .25s ease-in-out;
 	transition: background-image .25s ease-in-out;
 
 	background-size: cover;
-}
+}*/
 
 .misses {
-	width: 90vw;
+	width: 100%;
+	max-width: 100%;
 	margin: 0 auto;
 }
 
+
+
+
+._1,._4,._7,._10 { margin-left: 4% !important; }
+
+
+
+
 ._1 { background:url(1_.png);}
 ._2 { background:url(2_.png);}
-
-._3 { 
-	background:url(3_.png);
-}
-
+._3 { background:url(3_.png);}
 ._4 { background:url(4_.png);}
 ._5 { background:url(5_.png);}
 ._6 { background:url(6_.png);}
 ._7 { background:url(7_.png);}
 ._8 { background:url(8_.png);}
-
-
-
 ._9 { background:url(9_.png);}
 ._10 { background:url(10_.png);}
 ._11 { background:url(11_.png);}
-
-
 ._12 { background:url(12_.png);}
 
 
@@ -218,6 +222,23 @@ h1 {
 ._11:hover { background:url(11.png);}
 */
 
+.social {
+	position: absolute;
+	top: 1%;
+	right: 1%;
+}
+
+.social img {
+   -webkit-filter:invert(100%);
+     filter:progid:DXImageTransform.Microsoft.BasicImage(invert='1');
+}
+
+.social img:hover {
+   -webkit-filter:none;
+     filter:progid:none;
+
+     opacity: 0.5;
+}
 
 	</style>
 
@@ -229,16 +250,22 @@ h1 {
 		<h1 id="logo-text">Могилянська Міс <b>2015</b></h1>
 	</div>
 
+<div class="social">
+	<a href="https://vk.com/missnaukma"><img src="vk.png"></a>
+	<a href="https://www.facebook.com/missNaUKMA"><img src="fb.png"></a>
+	<a href="https://instagram.com/missnaukma/"><img src="insta.png"></a>
+
+</div>
+
 <div class="wrapper">
-	<p>Нарешті! Найочікуваніший конкурс краси цієї весни відбудеться <strong>15го травня о 18:00</strong> в КМЦ.
+
+
+	<p>Могилянська міс - щорічний благодійний конкурс, на якому обирають найкрасивішу представницю могилянської спільноти. 
 	</p>
-	<p>Отож готуйте долоні до оплесків, а очі — до краси;)</p>
-	<p>Всі кошти, зібрані від продажу квитків будуть передані для закупівлі індивідуальних аптечок першої допомоги для бійців АТО.
-	</p>
-	<p>Підписуйтесь на новини у <a href="https://vk.com/missnaukma">вконтакті</a>, <a href="https://www.facebook.com/missNaUKMA">фейсбуці</a> та <a href="https://instagram.com/missnaukma/">інстаграмі</a> </p>
+	<p>Цього року, 15 травня, дванадцятеро красунь змагатимуться за цей почесний титул. Гроші, зібрані від продажу квитків, буде передано групі <a href="http://patriotdefence.org/">Patriot Defence</a> для закупівлі індивідуальних аптечок першої допомоги для бійців АТО.</p>
 
 	<div class="misses">
-		<h1>Наші учасниці</h1>
+		<h1>Учасниці конкурсу</h1>
 		<div class="_1">
 			№1 Попсуй Анна 
 		</div>

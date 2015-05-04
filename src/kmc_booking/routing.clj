@@ -10,11 +10,16 @@
 	;(db/init-db)
 	;"fooooooooo!"
 	(pr-str (db/get-data))
+)
 
-	)
+(defn booking []
+	"testing"
+)
 
 (defroutes routes
-  (GET  "/" [] (index))
+  (GET "/" [] (ring/redirect "landing/index.html"))
+  ;(GET  "/" [] (index))
+  (GET  "/booking" [] (booking))
   (GET "/welcome-message" []
     {:status  200
      :headers {"Content-Type" "text/html"}
