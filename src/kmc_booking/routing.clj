@@ -3,6 +3,7 @@
               [clojure.string :as str]
               [ring.util.response :as ring]
               [kmc-booking.db :as db]
+              [kmc-booking.core :as core]
               ))
 
 
@@ -13,7 +14,7 @@
 )
 
 (defn booking []
-	"testing"
+	(pr-str @core/seats)
 )
 
 (defroutes routes

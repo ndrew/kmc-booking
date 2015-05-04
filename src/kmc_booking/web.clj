@@ -4,7 +4,8 @@
 	          [compojure.route :as route]
 	          [compojure.handler :as handler]
             [kmc-booking.routing :as rounting]
-            [kmc-booking.db :as db])
+            [kmc-booking.db :as db]
+            [kmc-booking.core :as core])
 	(:gen-class))
 
 
@@ -16,13 +17,22 @@
 
 (def application (handler/site routes))
 
+
+
 (defn init[] 
   (db/init-db)
-  )
+  ;; load seats from db
+  ;; (defonce seats)
+  (swap! core/seats assoc [1 5] :reserved)
+)
+
+
 
 (defn destroy[] 
   ;; 
   )
+
+
 
 (defn start [port]
   (ring/run-jetty application {:port port
