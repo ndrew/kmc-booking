@@ -183,18 +183,18 @@ h1 {
 
 
 
-._1 { background:url(1_.jpg);}
-._2 { background:url(2_.jpg);}
-._3 { background:url(3_.jpg);}
-._4 { background:url(4_.jpg);}
-._5 { background:url(5_.jpg);}
-._6 { background:url(6_.jpg);}
-._7 { background:url(7_.jpg);}
-._8 { background:url(8_.jpg);}
-._9 { background:url(9_.jpg);}
-._10 { background:url(10_.jpg);}
-._11 { background:url(11_.jpg);}
-._12 { background:url(12_.jpg);}
+._1 {  background:url(/img/1_.jpg);}
+._2 {  background:url(/img/2_.jpg);}
+._3 {  background:url(/img/3_.jpg);}
+._4 {  background:url(/img/4_.jpg);}
+._5 {  background:url(/img/5_.jpg);}
+._6 {  background:url(/img/6_.jpg);}
+._7 {  background:url(/img/7_.jpg);}
+._8 {  background:url(/img/8_.jpg);}
+._9 {  background:url(/img/9_.jpg);}
+._10 { background:url(/img/10_.jpg);}
+._11 { background:url(/img/11_.jpg);}
+._12 { background:url(/img/12_.jpg);}
 
 
 /* ._3:hover { 
@@ -229,4 +229,8 @@ h1 {
      filter:progid:none;
 
      opacity: 0.5;
+}
+
+button {
+	padding: 1rem;
 }

@@ -9,7 +9,9 @@
 (defn render! []
   (.render js/React
            (like-seymore app-state)
-           (.getElementById js/document "app")))
+           (.getElementById js/document "app"))
+
+  )
 
 (add-watch app-state :on-change 
 	(fn [_ _ _ _] (render!)))

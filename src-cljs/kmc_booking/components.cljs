@@ -6,4 +6,12 @@
              [:h1 "Pesto: " (:likes @data)]
              [:div [:a {:href "#"
                         :onClick #(swap! data update-in [:likes] inc)}
-                    "Thumbs up"]]]))
+                    "Thumbs up"]]
+			 [:button {
+			          	:onClick #(do 
+			             			(.log js/console "Foo")
+			             			)
+			             	} "Foo"
+		]]))
+
+
