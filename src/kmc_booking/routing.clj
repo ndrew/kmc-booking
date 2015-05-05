@@ -19,8 +19,15 @@
 
   #_(pr-str (db/migrated? db/testing-table))
 
-  ;(pr-str (db/create-seats-table))  
+
+  (db/drop-table! db/seats-table)
+  (db/drop-table! db/bookings-table)
+  
+  (pr-str (db/create-seats-table))
+  (pr-str (db/create-bookings-table))  
+  
   (pr-str (db/get-seats))
+
 
 )
 
