@@ -50,7 +50,7 @@
 
       { :id "dev"
             :source-paths ["src-cljs"]
-            :figwheel { :on-jsload "kmc-booking.core/start" }
+            :figwheel { :on-jsload "kmc-booking.core/render!" }
             :compiler {
               :output-to     "resources/public/booking.js"
               :output-dir    "resources/public/out"

@@ -14,11 +14,12 @@
 (add-watch app-state :on-change 
 	(fn [_ _ _ _] (render!)))
 
+(render!)
+
 ;;;
 
 (defn ^:export start[]
 	(.log js/console (pr-str @app-state))
-	(render!)
 	)
 
 
