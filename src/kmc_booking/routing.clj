@@ -20,13 +20,16 @@
   #_(pr-str (db/migrated? db/testing-table))
 
 
-  (db/drop-table! db/seats-table)
-  (db/drop-table! db/bookings-table)
-  
-  (pr-str (db/create-seats-table))
-  (pr-str (db/create-bookings-table))  
-  
+  #_(do 
+    (when (db/migrated? db/seats-table) (db/drop-table! db/seats-table))
+    (when (db/migrated? db/bookings-table) (db/drop-table! db/bookings-table))
+    
+    (pr-str (db/create-seats-table))
+    (pr-str (db/create-bookings-table))  
+  )
+
   (pr-str (db/get-seats))
+  (pr-str (str "Booking created: " (db/create-booking "Test User" "093777764" [])))
 
 
 )

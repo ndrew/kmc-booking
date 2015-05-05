@@ -34,6 +34,26 @@
 
 ;; seats
 
+(def seat-schema [[[1 1] [11 39]]
+                 [[12 4] [13 36]]
+                 [[14 1] [20 31]]
+                 [[21 1] [21 25]]
+                 ])
+
+;; rows first 
+(defn gen-seats-data [blocks]
+  (reduce (fn[a [[row1 col1] [row2 col2]]] 
+            (into a (for [rows (range row1 row2)
+                          cols (range col1 col2)]
+                      {:id (str rows "-" cols)
+                       :status "free"
+                  		}
+                      )
+                  )
+            ) [] blocks)	
+	)
+
+
 (defn create-seats-table [] 
 	(let [t (keyword seats-table)]
 		(sql/with-db-connection [c CONN] 
@@ -46,11 +66,7 @@
 			;; TODO: create more free seats
 
 			(apply sql/insert! c t 
-				[:id :status]
-				[
-					["1-1" "free"]
-					["1-2" "free"]]
-				)
+				(gen-seats-data seat-schema))
 
 		)	
 	)
@@ -59,7 +75,7 @@
 (defn get-seats []
 	(sql/with-db-connection [c CONN] 
 		(sql/query c
-                  [(str "select * from " seats-table)])
+                  [(str "select id, status from " seats-table)])
 		
 		))
 
@@ -71,8 +87,8 @@
 		
 			(sql/db-do-commands c
 	                     (sql/create-table-ddl t
-	                                            [:id "varchar(32)" :primary :key]
-	                                            [:name "varchar(32)"]
+	                                            [:id "varchar(48)" :primary :key]
+	                                            [:name "varchar(128)"]
 	                                            [:phone "varchar(16)"]
 	                                            [:date :timestamp :default :current_timestamp]))
 		)	
@@ -85,7 +101,9 @@
                   [(str "select * from " bookings-table)])
 		
 		))
-
+;; TODO: Ideally in one trasaction
+;; TODO: Check seats availability
+;; TODO: Apdate seats with status 
 (defn create-booking [name phone seats]
 	(let [booking-id (gen-id)]
 		(sql/with-db-connection [c CONN] 
@@ -95,10 +113,9 @@
 	                  	:name name
 	                  	:phone phone 
 	                  }
-			
 			)
 		)
-
+		booking-id
 	)
 )
 
