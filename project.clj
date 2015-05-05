@@ -15,7 +15,7 @@
 
 
                  [lein-figwheel "0.3.1"]
- 
+                 [sablono "0.3.4"]
                  ]
 
   :plugins [
@@ -47,18 +47,9 @@
           :optimizations :advanced
           :pretty-print  false
         }}
-  ]}
 
- 
-  :profiles {
-    :uberjar {:aot :all}
-    
-    :dev {
-      :cljsbuild {
-        :builds [
-          { :id "dev"
+      { :id "dev"
             :source-paths ["src-cljs"]
-
             :figwheel { :on-jsload "kmc-booking.core/start" }
             :compiler {
               :output-to     "resources/public/booking.js"
@@ -66,8 +57,13 @@
               :optimizations :none
               :source-map    true
             }}
-      ]}
-    }
+  ]}
+
+ 
+  :profiles {
+    :uberjar {:aot :all}
+    
+
   }
 
 

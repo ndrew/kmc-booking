@@ -14,8 +14,12 @@
 )
 
 (defn booking []
+  ;; also keep-alive
 	(pr-str @core/seats)
 )
+
+
+
 
 (defroutes routes
   (GET "/" [] (ring/redirect "landing/index.html"))
