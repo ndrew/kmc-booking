@@ -1,11 +1,11 @@
 (ns kmc-booking.core
   (:require [sablono.core :as sab]))
 
-(def app-state (atom { :likes 0 }))
+(defonce app-state (atom { :likes 0 }))
 
 (defn like-seymore [data]
   (sab/html [:div
-             [:h1 "Seymore's quantified popularity: " (:likes @data)]
+             [:h1 "Pesto: " (:likes @data)]
              [:div [:a {:href "#"
                         :onClick #(swap! data update-in [:likes] inc)}
                     "Thumbs up"]]]))
@@ -28,6 +28,5 @@
 (.log js/console (pr-str @app-state))
 
 
-;(reset! app-state {:likes 100})
 
 
