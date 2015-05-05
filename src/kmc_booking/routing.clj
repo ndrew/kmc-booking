@@ -7,15 +7,21 @@
               ))
 
 
-(defn index []
-	;(db/init-db)
-	;"fooooooooo!"
-	(pr-str (db/get-data))
-)
-
 (defn booking []
   ;; also keep-alive
-	(pr-str @core/seats)
+	
+  #_(str 
+    (pr-str @core/seats)
+    "<hr>"
+    (pr-str (db/get-data))
+
+    )
+
+  #_(pr-str (db/migrated? db/testing-table))
+
+  ;(pr-str (db/create-seats-table))  
+  (pr-str (db/get-seats))
+
 )
 
 

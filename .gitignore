@@ -16,3 +16,5 @@ logfile
 /resources/public/booking.js
 .DS_Store
 figwheel_server.log
+.idea/*
+*.iml
