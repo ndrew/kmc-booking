@@ -18,6 +18,11 @@
                  [rum "0.2.6"]
 
                  [com.cemerick/friend "0.2.1"]
+                 
+                 [com.cognitect/transit-clj "0.8.271"]
+                 [com.cognitect/transit-cljs "0.8.207"]
+                 
+                  [org.clojure/core.cache "0.6.3"]
                  ]
 
   :plugins [

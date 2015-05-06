@@ -1,10 +1,35 @@
 (ns kmc-booking.routing
-	(:require [compojure.core :refer [defroutes GET POST]]
-              [clojure.string :as str]
-              [ring.util.response :as ring]
-              [kmc-booking.db :as db]
-              [kmc-booking.core :as core]
-              ))
+	(:require [compojure.core :refer [defroutes GET POST ANY]]
+               [clojure.string :as str]
+
+               [ring.util.response :as ring]
+               [ring.middleware.params :as params]
+
+               [kmc-booking.db :as db]
+               [kmc-booking.core :as core]
+ 
+               [cemerick.friend :as friend]
+               (cemerick.friend [workflows :as workflows]
+                                [credentials :as creds])
+
+               [cognitect.transit :as transit]
+               [clojure.java.io :as io]
+              )
+  (:import
+      [java.io ByteArrayOutputStream ByteArrayInputStream])
+  )
+
+(defn write-transit-bytes [x]
+  (let [baos (ByteArrayOutputStream.)
+        w    (transit/writer baos :json {})]
+    (transit/write w x)
+    (.toByteArray baos)))
+
+(defn wrap-transit-response [handler]
+  (fn [request]
+    (-> (handler request)
+       (update-in [:headers] assoc "Content-Type" "application/transit+json; charset=utf-8")
+       (update-in [:body] #(io/input-stream (write-transit-bytes %))))))
 
 
 (defn booking []
@@ -33,6 +58,14 @@
 )
 
 
+(defn seats []
+  @core/seats
+)
+
+
+(defn admin[]
+  "I rule everything!"
+  )
 
 
 (defroutes routes
@@ -43,5 +76,20 @@
     {:status  200
      :headers {"Content-Type" "text/html"}
      :body    "Hello world from server!"})
-  )
+
+
+  (friend/logout (ANY "/logout" request 
+                              (ring/redirect "/")))
+
+  (GET "/admin" req 
+    (friend/authenticated 
+      (str "You have successfully authenticated as "
+                                  (friend/current-authentication)
+        
+                                  )))
+
+   (wrap-transit-response 
+      (GET "/seats" request {:body (seats)}))
+
+)
 

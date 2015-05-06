@@ -1,11 +1,34 @@
 (ns ^:figwheel-always kmc-booking.core 
   (:require [kmc-booking.components :refer [like-seymore]]
-  			[rum :as rum]))
+  			[rum :as rum]
+
+  			[cognitect.transit :as transit]
+
+	)
+    (:import
+    	goog.net.XhrIo)
+)
 
 
 (defn el [id] (js/document.getElementById id))
 
 ;; (rum/defc name doc-string? [< mixins+]? [params*] render-body+)
+
+(defn read-transit [s]
+  (transit/read (transit/reader :json {:handlers {"datascript/Datom" (fn[a] 
+  	(println "read transit")
+  	)}}) s))
+
+(defn- ajax [url callback & [method]]
+  (.send goog.net.XhrIo url
+    (fn [reply]
+      (let [res (.getResponseText (.-target reply))
+            res (read-transit res);(profile (str "read-transit " url " (" (count res) " bytes)") (read-transit res))
+            ]
+        (when callback
+          (js/setTimeout #(callback res) 0))))
+    (or method "GET")))
+
 
 
 ;;;; state
@@ -93,7 +116,12 @@
 		(fn [_ _ _ _] (render!)))
 	(render!)
 	
-	)
+
+	(ajax "/seats" (fn [data]
+		(println "Yo!")
+		(println data)
+		) "GET")
+)
 
 (set! (.-onload js/window) start)
 
