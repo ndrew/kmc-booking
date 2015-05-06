@@ -64,7 +64,15 @@
 						(map #(vector :div.row_num %) (range 1 14))])
 
 				[:div#left_side_house.side_house 
-					(into [:div] (map #(vector :div.col_num %) (reverse (range 37 40))))
+					(let [xs (reverse (range 37 40))
+					      ys (range 1 14)]
+						(concat 
+							(into [:div] (map #(vector :div.col_num %) xs))
+							(map (fn[[y x]] (vector :div.seat {:x x :y y} (pr-str [x y]))) 
+								(for [y ys x xs] [y x])
+								)
+							)
+						)
 				]
 				[:div#left_house.house 
 					(into [:div] (map #(vector :div.col_num %) (reverse (range 20 37))))
