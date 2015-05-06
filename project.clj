@@ -13,9 +13,9 @@
 
                  [org.clojure/clojurescript "0.0-3211"]
 
-
                  [lein-figwheel "0.3.1"]
                  [sablono "0.3.4"]
+                 [rum "0.2.6"]
                  ]
 
   :plugins [
@@ -46,6 +46,7 @@
           :output-to     "resources/public/booking.min.js"
           :optimizations :advanced
           :pretty-print  false
+          :warnings {:single-segment-namespace false}
         }}
 
       { :id "dev"
@@ -56,13 +57,14 @@
               :output-dir    "resources/public/out"
               :optimizations :none
               :source-map    true
+              :warnings {:single-segment-namespace false}
+
             }}
   ]}
 
  
   :profiles {
     :uberjar {:aot :all}
-    
 
   }
 
