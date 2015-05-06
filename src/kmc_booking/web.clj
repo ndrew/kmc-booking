@@ -64,7 +64,7 @@
 
 
 ;; uncomment for figwheel
-(init)
+;;(init)
 
 
 (defn -main 
