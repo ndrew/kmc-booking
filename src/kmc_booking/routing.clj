@@ -19,6 +19,7 @@
       [java.io ByteArrayOutputStream ByteArrayInputStream])
   )
 
+
 (defn write-transit-bytes [x]
   (let [baos (ByteArrayOutputStream.)
         w    (transit/writer baos :json {})]
@@ -30,6 +31,7 @@
     (-> (handler request)
        (update-in [:headers] assoc "Content-Type" "application/transit+json; charset=utf-8")
        (update-in [:body] #(io/input-stream (write-transit-bytes %))))))
+
 
 
 (defn booking []
@@ -71,12 +73,11 @@
 (defroutes routes
   (GET "/" [] (ring/redirect "landing/index.html"))
   ;(GET  "/" [] (index))
-  (GET  "/booking" [] (booking))
+  (GET "/booking" [] (booking))
   (GET "/welcome-message" []
     {:status  200
      :headers {"Content-Type" "text/html"}
      :body    "Hello world from server!"})
-
 
   (friend/logout (ANY "/logout" request 
                               (ring/redirect "/")))
@@ -84,12 +85,11 @@
   (GET "/admin" req 
     (friend/authenticated 
       (str "You have successfully authenticated as "
-                                  (friend/current-authentication)
-        
-                                  )))
+                                  (friend/current-authentication))))
 
-   (wrap-transit-response 
-      (GET "/seats" request {:body (seats)}))
-
+  (compojure.core/context "/api" []
+    (wrap-transit-response 
+        (GET "/seats" request {:body (seats)})))
+   
 )
 

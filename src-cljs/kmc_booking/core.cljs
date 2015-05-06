@@ -117,7 +117,7 @@
 	(render!)
 	
 
-	(ajax "/seats" (fn [data]
+	(ajax "/api/seats" (fn [data]
 		(println "Yo!")
 		(println data)
 		) "GET")

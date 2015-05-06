@@ -12,7 +12,7 @@
             (cemerick.friend [workflows :as workflows]
                              [credentials :as creds])
 
-            
+
             )
 	(:gen-class))
 
@@ -45,9 +45,11 @@
                                  :realm "You shall not pass!")]}))
 
 
+
 (defn init[] 
   (db/init-db)
-  (reset! core/seats (db/get-seats)))
+  (core/init-seats! (db/get-seats)))
+
 
 
 (defn start [port]
@@ -61,8 +63,12 @@
 )
 
 
+;; uncomment for figwheel
+(init)
 
 
-(defn -main []
+(defn -main 
+  "for heroku"
+  []
   (let [port (Integer. (or (System/getenv "PORT") "8080"))]
     (start port)))
