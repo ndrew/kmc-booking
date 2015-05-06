@@ -244,3 +244,17 @@ h1 {
 button {
 	padding: 1rem;
 }
+
+
+/* booking */
+
+#app {
+	margin: 1rem;
+	background-color: rgba(128,128,128,0.1);
+}
+
+#rum-app {
+	margin: 1rem;
+	background-color: rgba(255,128,128,0.1);
+}
+

@@ -16,6 +16,8 @@
                  [lein-figwheel "0.3.1"]
                  [sablono "0.3.4"]
                  [rum "0.2.6"]
+
+                 [com.cemerick/friend "0.2.1"]
                  ]
 
   :plugins [
@@ -51,7 +53,9 @@
 
       { :id "dev"
             :source-paths ["src-cljs"]
-            :figwheel { :on-jsload "kmc-booking.core/render!" }
+            :figwheel { 
+              :on-jsload "kmc-booking.core/start"
+               }
             :compiler {
               :output-to     "resources/public/booking.js"
               :output-dir    "resources/public/out"
