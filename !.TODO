@@ -1,0 +1,24 @@
+
+frontend:
+  ☐ layout
+  ☐ form for entering data
+    ☐ validation
+
+system:
+ ☐ use global seats atom
+ ☐ poll for changes (keep-alive)
+ ☐ db
+
+admin:
+ ☐ auth
+
+
+design:
+    ☐ kmc logo
+
+minor:
+  image caching
+
+
+later:
+  cursive clojure
