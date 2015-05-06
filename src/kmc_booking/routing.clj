@@ -61,6 +61,10 @@
 
 
 (defn seats []
+
+  (when (empty? @core/seats) ;; for figwheel
+    (core/init-seats! (db/get-seats)))
+
   @core/seats
 )
 
@@ -74,10 +78,6 @@
   (GET "/" [] (ring/redirect "landing/index.html"))
   ;(GET  "/" [] (index))
   (GET "/booking" [] (booking))
-  (GET "/welcome-message" []
-    {:status  200
-     :headers {"Content-Type" "text/html"}
-     :body    "Hello world from server!"})
 
   (friend/logout (ANY "/logout" request 
                               (ring/redirect "/")))

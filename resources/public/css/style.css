@@ -258,3 +258,92 @@ button {
 	background-color: rgba(255,128,128,0.1);
 }
 
+.seat-plan {
+	outline: 1px solid red;
+	margin: 1rem;
+}
+
+
+
+/* ПАРТЕР */
+
+#parter {
+  width: 1168px;
+  position: relative;
+  height: 520px;
+  margin: 10px;
+  font-size: 9px;
+
+  outline: 1px solid blue;
+}
+
+#parter #rows.left {
+	float: left; margin-left: -15px;
+
+	outline: 1px solid red;
+}
+
+#parter #rows.right {
+	float: right; margin-right: -40px;
+
+	outline: 1px solid red;
+
+}
+
+
+/* бокові ложі */
+
+.side_house {
+  position: absolute;
+  height: 300px;
+  width: 85px;
+  top: 0px;
+}
+
+#left_side_house {
+  left: 20px; /*  background-color: #DDF; */
+}
+
+#right_side_house {
+    right: 20px; /* background-color: #DFF; */
+}
+
+/* початок партеру */
+
+.house {
+  position: absolute;
+  height: 355px;
+}
+
+#left_house {
+  left: 130px;
+  width: 480px; /* background-color: #FDF; */ 
+}
+
+#right_house {
+  right: 115px;
+  width: 450px; /* background-color: #DFD; */
+}
+
+/* БЕЛЬЄТАЖ) */
+
+#back_house {
+  font-size: 9px;
+  display: inline-block;
+  margin-left: 158px;
+  width: 880px;
+  height: 390px; /*background-color: #FFD; */
+}
+
+#beletage {
+  margin-left: 15px;    
+  height: 260px; /*background-color: #FFD; */
+}
+
+#beletage_last_row {
+  margin-left: 84px;
+  margin-top: 40px;
+  /*background-color: #FFD; */
+}
+
+

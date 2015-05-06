@@ -6,9 +6,10 @@ frontend:
 
 system:
  ☐ use global seats atom
- ☐ poll for changes (keep-alive)
  ☐ db
-
+   
+ ☐ poll for changes (keep-alive)
+ 
 admin:
  ☐ auth
 

@@ -10,9 +10,9 @@
 )
 
 
-(defn el [id] (js/document.getElementById id))
+;;; utils
 
-;; (rum/defc name doc-string? [< mixins+]? [params*] render-body+)
+(defn el [id] (js/document.getElementById id))
 
 (defn read-transit [s]
   (transit/read (transit/reader :json {:handlers {"datascript/Datom" (fn[a] 
@@ -39,9 +39,57 @@
 	:text "Hello world!"
 
 	:first-input "123" :second-input "456"
+	:seats {}
+	;:seats-plan [[]]
 }))
 
 ;;; rum 
+
+;; (rum/defc name doc-string? [< mixins+]? [params*] render-body+)
+
+(rum/defc seat-plan < rum/cursored-watch [app-state]
+	(let [seats (rum/cursor app-state [:seats])]
+		[:div.seat-plan 
+			[:div#parter 
+				
+				(into 
+					[:div#rows.left]
+					 	[[:div.col_num [:div {:__html "&nbsp;"}]]
+					 	[:div.col_num [:div {:__html "&nbsp;"}]]
+						(map #(vector :div.row_num %) (range 1 14))])
+
+				(into [:div#rows.right]
+					 	[[:div.col_num [:div {:__html "&nbsp;"}]]
+					 	[:div.col_num [:div {:__html "&nbsp;"}]]
+						(map #(vector :div.row_num %) (range 1 14))])
+
+				[:div#left_side_house.side_house 
+					(into [:div] (map #(vector :div.col_num %) (reverse (range 37 40))))
+				]
+				[:div#left_house.house 
+					(into [:div] (map #(vector :div.col_num %) (reverse (range 20 37))))
+					]
+				[:div#right_house.house 
+					(into [:div] (map #(vector :div.col_num %) (reverse (range 4 20))))
+
+					]
+				[:div#right_side_house.side_house
+					(into [:div] (map #(vector :div.col_num %) (reverse (range 1 4))))
+
+					]
+
+				]
+
+			[:div#back_house 
+				[:div#rows.left "1 2 3 "]
+				[:div#rows.right "1 2 3 "]
+				[:div#beletage "!"]
+				[:div#beletage_last_row ""]
+			]
+			(str (count @seats))
+			]
+		)
+)
 
 
 (rum/defc item [text]
@@ -105,21 +153,21 @@
 	(.log js/console (pr-str @app-state))
 	
 	;; mount rum
-
+	
 	(rum/mount (item-list [1 2 3]) 
 		(el "rum-app"))
 
 	(rum/mount (big-component app-state) (el "rum-app-1"))
 
+	(rum/mount (seat-plan app-state) (el "scheme"))
 
 	(add-watch app-state :on-change 
 		(fn [_ _ _ _] (render!)))
 	(render!)
 	
 
-	(ajax "/api/seats" (fn [data]
-		(println "Yo!")
-		(println data)
+	(ajax "/api/seats" (fn [seats]
+		(swap! app-state assoc :seats seats)
 		) "GET")
 )
 

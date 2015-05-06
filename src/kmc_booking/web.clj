@@ -37,7 +37,6 @@
 
 (def application (friend/authenticate
                    app*
-
                    {:allow-anon? true
                     :unauthenticated-handler #(workflows/http-basic-deny "kmc booking" %)
                     :workflows [(workflows/http-basic
