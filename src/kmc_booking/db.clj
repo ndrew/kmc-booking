@@ -1,6 +1,7 @@
 (ns kmc-booking.db
 	(:require [clojure.java.jdbc :as sql]))
 
+
 (def bookings-table "bookings")
 (def seats-table "seats")
 (def testing-table "testing")
@@ -10,6 +11,27 @@
 (def CONN 
 	(or (System/getenv "DATABASE_URL")
 		"postgresql://postgres:postgres@localhost:5432/misskma"))
+
+
+(def seat-schema  ;; [[row-start col-start] [row-end col-end]]
+	[[[1 1] [11 39]]
+     [[12 4] [13 36]]
+     [[14 1] [20 31]]
+     [[21 1] [21 25]]])
+
+
+;; as described in seat-scema
+(defn gen-seats-data [blocks]
+  (reduce (fn[a [[row1 col1] [row2 col2]]] 
+            (into a (for [rows (range row1 row2)
+                          cols (range col1 col2)]
+                      {:id (str rows "-" cols)
+                       :status "free"
+                  		}))
+            ) [] blocks))
+
+;;;;;;;;;
+;; DDL
 
 
 (defn migrated? [table]
@@ -22,9 +44,8 @@
 (defn drop-table! [table]
 	(sql/with-db-connection [c CONN] 
 		(sql/db-do-commands c
-	                     (sql/drop-table-ddl table))
-		)
-	)
+	                     (sql/drop-table-ddl table))))
+
 
 (defn create-testing-table[]
 	(sql/db-do-commands CONN
@@ -32,54 +53,19 @@
 		(sql/insert! CONN
 	                    :testing {:data "Hello World"}))
 
+
 ;; seats
-
-(def seat-schema [[[1 1] [11 39]]
-                 [[12 4] [13 36]]
-                 [[14 1] [20 31]]
-                 [[21 1] [21 25]]
-                 ])
-
-;; rows first 
-(defn gen-seats-data [blocks]
-  (reduce (fn[a [[row1 col1] [row2 col2]]] 
-            (into a (for [rows (range row1 row2)
-                          cols (range col1 col2)]
-                      {:id (str rows "-" cols)
-                       :status "free"
-                  		}
-                      )
-                  )
-            ) [] blocks)	
-	)
-
 
 (defn create-seats-table [] 
 	(let [t (keyword seats-table)]
 		(sql/with-db-connection [c CONN] 
-		
 			(sql/db-do-commands c
 	                     (sql/create-table-ddl t
 	                                            [:id "varchar(10)" :primary :key]
 	                                            [:status "varchar(20)"]
 	                                            [:booking_id "varchar(32)"]))
-			;; TODO: create more free seats
-
 			(apply sql/insert! c t 
-				(gen-seats-data seat-schema))
-
-		)	
-	)
-)
-
-(defn get-seats []
-	(sql/with-db-connection [c CONN] 
-		(sql/query c
-                  [(str "select id, status from " seats-table)])
-		
-		))
-
-;; bookings
+				(gen-seats-data seat-schema)))))
 
 (defn create-bookings-table [] 
 	(let [t (keyword bookings-table)]
@@ -95,12 +81,44 @@
 	)
 )
 
+
+(defn init-db[] 
+	(when-not (migrated? testing-table)
+		(create-testing-table))
+
+	(when-not (migrated? seats-table)
+		(create-seats-table))
+
+	(when-not (migrated? bookings-table)
+		(create-bookings-table))
+
+)
+
+
+;;;;;;;;;
+;; DML
+
+
+(defn get-test-data[] 
+	(sql/with-db-connection [c CONN] 
+		(sql/query c
+                  ["select * from testing"])))
+
+
+(defn get-seats []
+	(sql/with-db-connection [c CONN] 
+		(sql/query c
+                  [(str "select * from " seats-table)])))
+
+
 (defn get-bookings []
 	(sql/with-db-connection [c CONN] 
 		(sql/query c
-                  [(str "select * from " bookings-table)])
-		
-		))
+                  [(str "select * from " bookings-table)])))
+
+
+
+
 ;; TODO: Ideally in one trasaction
 ;; TODO: Check seats availability
 ;; TODO: Apdate seats with status 
@@ -119,27 +137,7 @@
 	)
 )
 
-;;
-
-(defn init-db[] 
-	(when-not (migrated? testing-table)
-		(create-testing-table))
-
-	(when-not (migrated? seats-table)
-		(create-seats-table))
-
-	(when-not (migrated? bookings-table)
-		(create-bookings-table))
 
 
-	)
-
-
-(defn get-data[] 
-	(sql/with-db-connection [c CONN] 
-		(sql/query c
-                  ["select * from testing"])
-		
-		))
 
 

@@ -10,13 +10,6 @@
 (defn booking []
   ;; also keep-alive
 	
-  #_(str 
-    (pr-str @core/seats)
-    "<hr>"
-    (pr-str (db/get-data))
-
-    )
-
   #_(pr-str (db/migrated? db/testing-table))
 
 
@@ -28,9 +21,14 @@
     (pr-str (db/create-bookings-table))  
   )
 
-  (pr-str (db/get-seats))
-  (pr-str (str "Booking created: " (db/create-booking "Test User" "093777764" [])))
+  #_(pr-str (db/get-seats))
+  #_(pr-str (str "Booking created: " (db/create-booking "Test User" "093777764" [])))
 
+  (str 
+    (pr-str @core/seats)
+    "<hr>"
+    (pr-str (db/get-test-data))
+    )
 
 )
 
@@ -46,3 +44,4 @@
      :headers {"Content-Type" "text/html"}
      :body    "Hello world from server!"})
   )
+

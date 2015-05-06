@@ -12,33 +12,30 @@
 (defroutes routes
   rounting/routes
   (route/resources "/")
-  ;(route/not-found (layout/four-oh-four))
-  )
+); (route/not-found (layout/four-oh-four))
+
 
 (def application (handler/site routes))
 
 
-
 (defn init[] 
   (db/init-db)
-  ;; load seats from db
-  ;; (defonce seats)
-  (swap! core/seats assoc [1 5] :reserved)
-)
+  (reset! core/seats (db/get-seats)))
 
+
+(defn start [port]
+  (init)
+  (ring/run-jetty application {:port port
+                               :join? false}))
 
 
 (defn destroy[] 
   ;; 
-  )
+)
 
 
 
-(defn start [port]
-  (ring/run-jetty application {:port port
-                               :join? false}))
 
 (defn -main []
-  (init)
   (let [port (Integer. (or (System/getenv "PORT") "8080"))]
     (start port)))
