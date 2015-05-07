@@ -251,6 +251,9 @@ button {
 	padding: 1rem;
 }
 
+.seat-plan {
+	line-height: 1.0;
+}
 
 
 .seat {
@@ -259,12 +262,11 @@ button {
   
   height: 34px;
   width: 25px;
-  margin-left: 2px;
-  margin-top: 1px;
-  margin-bottom: 1px;
- 
-  background-color: gray;
 
+  margin-left: 2px;
+/*  margin-top: 1px;
+  margin-bottom: 1px; */
+  background-color: gray;
 
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -274,25 +276,29 @@ button {
   user-select: none;
 }
 
+.seat:hover {
+  cursor: pointer;
+  /*cursor:crosshair;*/
+}
 
 #scheme {
-	
 	margin-left: 40px;
   	margin-top: 70px;
 }
 
+
 #parter {
   position: relative;
 
-  height: 650px;
+  height: 580px;
   width: 1168px;
   margin: 10px; 
 
   font-size: 9px;
 
-  outline: 1px solid blue;
+/*  outline: 1px solid blue;
   background-color: rgba(128,129,128,0.1);
-}
+*/}
 
 
 
@@ -312,9 +318,10 @@ button {
 	margin-right: -15px; 
 }
 
-#rows.left, #parter #rows.right {
+/*#rows.left, #parter #rows.right {
 	background-color: rgba(255, 128, 0, 0.1);
 } 
+*/
 
 .side_house {
   position: absolute;
@@ -322,8 +329,8 @@ button {
   width: 85px;
   top: 0px;
 
-  background-color: rgba(255, 255, 0, 0.1);
-
+/*  background-color: rgba(255, 255, 0, 0.1);
+*/
 }
 
 #left_side_house {
@@ -338,8 +345,8 @@ button {
   position: absolute;
   height: 355px;
 
-  background-color: rgba(0, 255, 0, 0.1);
-
+/*  background-color: rgba(0, 255, 0, 0.1);
+*/
 }
 
 #left_house {
@@ -360,8 +367,8 @@ button {
   margin-left: 158px;
   width: 880px;
   height: 390px; 
-  background-color: #FFD; 
-}
+/*  background-color: #FFD; 
+*/}
 
 
 #back_house #rows.left {
@@ -377,7 +384,7 @@ button {
   height: 260px; 
 
 
-  background-color: #DFD; 
+/*  background-color: #DFD; */
 }
 
 #beletage_last_row {
@@ -395,7 +402,7 @@ button {
   margin-top: 0px; margin-bottom: 2px;
   width: 25px; height: 34px;
   
-  background-color: rgba(128,129,0,0.1);
+/*  background-color: rgba(128,129,0,0.1);*/
 }
 
 .row_num div {

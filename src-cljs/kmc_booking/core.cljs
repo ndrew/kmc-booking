@@ -86,7 +86,7 @@
 								(for [y house_rows x right_house_cols] [y x]))
 							(into [:div] (map #(vector :div.col_num [:div %]) right_house_cols)))
 
-	      back_house_rows (range 14 20)
+	      back_house_rows (range 14 21)
 
 	      beletage_cols (range 1 32)
 	      beletage (conj 
