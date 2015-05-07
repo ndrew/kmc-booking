@@ -462,69 +462,13 @@ button {
 }
 
 
-
-/* booking */
-
-/*#app {
-	margin: 1rem;
-	background-color: rgba(128,128,128,0.1);
-}
-
-#rum-app {
-	margin: 1rem;
-	background-color: rgba(255,128,128,0.1);
-}*/
-
-
-
-/* 
-.seat-plan {
-	outline: 1px solid red;
-	margin: 1rem;
-}
-
-
-
-
-
-
-
-#back_house {
-  font-size: 9px;
+#kmc-logo {
+  background-color: rgba(128,129,128,0.1);
   display: inline-block;
-  margin-left: 158px;
-  width: 880px;
-  height: 390px;
+
+  padding: .7rem .5rem .5rem .5rem;
+
+  font: normal 900 1.5rem Helvetica, Arial;
+  border: .2rem solid black;
+  margin: .25rem;
 }
-
-#beletage {
-  margin-left: 15px;    
-  height: 260px;
-}
-
-#beletage_last_row {
-  margin-left: 84px;
-  margin-top: 40px;
-}
-
-
-
-
-.rows {}
-.row_num { 
-  margin-top: 0px; margin-bottom: 2px;
-  width: 25px; height: 34px;
-}
-
-.row_num div {
-  display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-  width: 25px;
-  height: 34px;
-  font-size: 10px;
-  font-weight: 700;
-  font: bold 14px Arial, sans-serif;
-}
-
-*/
