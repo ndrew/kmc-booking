@@ -62,8 +62,12 @@
 
 (defn seats []
 
-  ;(when (empty? @core/seats) ;; for figwheel
-  ;  (core/init-seats! (db/get-seats)))
+  (when (empty? @core/seats) ;; for figwheel
+    (core/init-seats! 
+      ;(db/get-seats)
+      (db/gen-seats-data db/seat-schema)
+      ))
+
 
   @core/seats
 )
