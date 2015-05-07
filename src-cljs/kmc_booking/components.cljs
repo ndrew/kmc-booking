@@ -18,7 +18,7 @@
 (def renders (atom 0))
 
 
-(rum/defc booking-info  < rum/cursored-watch [app-state]
+(rum/defc booking-info [app-state] ;;  < rum/cursored
 	(let [seats (rum/cursor app-state [:seats])
 		  booked (filter 
    					(fn [[k {status :status}]]
@@ -39,18 +39,16 @@
 ;;;
 
 
-(rum/defc seat < rum/cursored-watch [y x ref]
-	(let [current ref
-		  seat-click (fn[e] 
-				(let [el (.-target e)
-					  id (seat-id (attr el "y") (attr el "x"))]
-				;(println "foo")
-				(swap! current assoc :status (if (= "free" (@current :status)) "pending" "free"))
-				))
 
-		]
+(rum/defc seat < rum/cursored rum/cursored-watch [y x ref] ;; < rum/cursored-watch
+	(let [current ref]
 		[:div {:x x :y y 
-				:onClick seat-click
+				:onClick (fn[e] 
+							(let [el (.-target e)
+								  id (seat-id (attr el "y") (attr el "x"))]
+
+										(swap! current assoc :status 
+											(if (= "free" (@current :status)) "pending" "free"))))
 			 	:class (do 
 			 							
 			 				(when (= "pending" (get @current :status))
@@ -95,7 +93,7 @@
 
 
 
-(rum/defc seat-block < rum/cursored-watch [root rows cols seats]
+(rum/defc seat-block < rum/cursored [root rows cols seats] ; < rum/cursored 
 	(reduce conj root [
 		(if (= 1 (count rows))
 			nil
@@ -123,7 +121,7 @@
 (defonce beletage_last_cols (range 1 26))
 (defonce beletage_last_rows (range 21 22))
 
-(rum/defc seat-plan < rum/cursored-watch [app-state]
+(rum/defc seat-plan < rum/cursored rum/cursored-watch [app-state] 
 	(let [seats (rum/cursor app-state [:seats])]
 
 		[:div.seat-plan {:key "root"}
