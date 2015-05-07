@@ -10,19 +10,29 @@
 (defn- attr[el n]
 	(.getAttribute el n))
 
-
 (defn- range-key [r] 
     [(first r) (last r)])
 
 ;;;;;
+
+(def renders (atom 0))
+
 
 (rum/defc booking-info  < rum/cursored-watch [app-state]
 	(let [seats (rum/cursor app-state [:seats])
 		  booked (filter 
    					(fn [[k {status :status}]]
      					(= "pending" status)) @seats)]
-		[:pre 
-			(pr-str booked)
+		[:div 
+			[:pre (pr-str booked)]
+		[:hr]
+		[:button {:onClick (fn[e] 
+			(.warn js/console (.now js/Date))
+			(swap! app-state assoc-in [:seats "21-1" :status] 
+				"pending")
+			)} "piy!"]
+		[:hr]
+		[:pre (str "renders: " (pr-str @renders))]
 		]
 	)
 )
@@ -42,7 +52,14 @@
 		]
 		[:div {:x x :y y 
 				:onClick seat-click
-			 	:class (if-not @current "seat" ["seat" (get @current :status)]
+			 	:class (do 
+			 							
+			 				(when (= "pending" (get @current :status))
+								(swap! renders inc)
+								;(.warn js/console (.now js/Date))
+			 					)
+			 				(if-not @current "seat" ["seat" (get @current :status)])
+
 			 				)
 			 	;:class (reduce conj ["seat"] 
 				;			(if-not (@seats id)
@@ -96,25 +113,23 @@
 )		
 
 
-(rum/defc seat-plan < rum/cursored-watch rum/reactive [app-state]
+(rum/defc seat-plan < rum/cursored-watch [app-state]
 	(let [seats (rum/cursor app-state [:seats])
 
+	      parter-rows (range 1 14)
 		  side_rows (range 1 12)
-		  house_rows (range 1 14)
+		  back_house_rows (range 14 21)
 
 		  left_side_cols (reverse (range 37 40))
 		  right_side_cols (reverse (range 1 4))
-
 		  left_house_cols (reverse (range 20 37))
 		  right_house_cols (reverse (range 4 20)) 		
 
-		  back_house_rows (range 14 21)
 	      beletage_cols (range 1 32)
 
 	      beletage_last_cols (range 1 26)
 	      beletage_last_rows (range 21 22)
 		
-	      parter-rows (range 1 14)
 		]
 
 		[:div.seat-plan {:key "root"}
@@ -122,23 +137,23 @@
 				(rum/with-props seat-rows parter-rows "left" :rum/key (str "left_" (range-key parter-rows)))
 				(rum/with-props seat-rows parter-rows "right" :rum/key (str "right_" (range-key parter-rows)))
 
-				(seat-block [:div#left_side_house.side_house] side_rows left_side_cols seats)
-				(seat-block [:div#left_house.house] house_rows left_house_cols seats)
-				(seat-block [:div#right_house.house] house_rows right_house_cols seats)
-				(seat-block [:div#right_side_house.side_house] side_rows right_side_cols seats)
+				(rum/with-props seat-block [:div#left_side_house.side_house] side_rows left_side_cols seats "left" :rum/key "left_side_house.side_house")
+				(rum/with-props seat-block [:div#left_house.house] parter-rows left_house_cols seats :rum/key "left_house.house")
+				(rum/with-props seat-block [:div#right_house.house] parter-rows right_house_cols seats :rum/key "right_house.house")
+				(rum/with-props seat-block [:div#right_side_house.side_house] side_rows right_side_cols seats :rum/key "right_side_house.side_house")
 				]
 			[:div#back_house {:key "back_house"}
-				(rum/with-props seat-rows house_rows "left" :rum/key (str "left_" (range-key house_rows)))
-				(rum/with-props seat-rows house_rows "right" :rum/key (str "right_" (range-key house_rows)))
+				(rum/with-props seat-rows back_house_rows "left" :rum/key (str "left_" (range-key back_house_rows)))
+				(rum/with-props seat-rows back_house_rows "right" :rum/key (str "right_" (range-key back_house_rows)))
 
-				(seat-block [:div#beletage] back_house_rows beletage_cols seats)
-				]
+				(rum/with-props seat-block [:div#beletage] back_house_rows beletage_cols seats :rum/key "beletage")
+			]
 
 			[:div#last_row {:key "last_row"}
 				(rum/with-props seat-rows beletage_last_rows "left" :rum/key (str "left_" (range-key beletage_last_rows)))
 				(rum/with-props seat-rows beletage_last_rows "right" :rum/key (str "right_" (range-key beletage_last_rows)))
 
-				(seat-block [:div#beletage_last_row] beletage_last_rows beletage_last_cols seats)
+				(rum/with-props seat-block [:div#beletage_last_row] beletage_last_rows beletage_last_cols seats :rum/key "beletage_last_row")
 				]
 
 
