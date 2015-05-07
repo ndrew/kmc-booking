@@ -50,7 +50,6 @@
 
 (defn ^:export start[]
 	(enable-console-print!)
-	(println "start")
 	;(println "Initial state")
 	;(.log js/console (pr-str @app-state))
 
@@ -62,7 +61,6 @@
 
 		(add-watch app-state :render 
 			(fn [_ _ _ _] 
-				(println "state changed")
 				(rum/request-render nfo-comp)
 				(rum/request-render seat-comp))))
 
