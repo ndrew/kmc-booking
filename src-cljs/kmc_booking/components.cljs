@@ -51,8 +51,17 @@
 				} ""]))
 
 
+(rum/defc seat-col < rum/static [col]
+	[:div.col_num 
+		[:div {:key col} col]
+		]
+	)
+
+
 (rum/defc seat-cols < rum/static [range]
-	(into [:div] (map #(vector :div.col_num [:div {:key %} %]) range)))
+	(into [:div] 
+		(map #(rum/with-props seat-col % :rum/key %)
+			range)))
 
 
 (rum/defc seat-row < rum/static [row]
