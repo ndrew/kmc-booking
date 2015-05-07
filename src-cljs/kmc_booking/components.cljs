@@ -27,7 +27,6 @@
 			[:pre (pr-str booked)]
 		[:hr]
 		[:button 
-
 			{:onClick (fn[e] 
 				(swap! app-state assoc-in [:seats (.prompt js/window "use row-seat format like '1-39'" "1-39") :status] 
 					"pending")
@@ -41,26 +40,13 @@
 ;;;
 
 
+(rum/defc seat < rum/cursored  [y x current] ;; < rum/cursored-watch
+	(when (= "pending" (get @current :status))
+			(swap! renders inc))
 
-(rum/defc seat < rum/cursored rum/cursored-watch [y x ref] ;; < rum/cursored-watch
-	(let [current ref]
-		[:div {:x x :y y 
-				:onClick (fn[e] 
-							(let [el (.-target e)
-								  id (seat-id (attr el "y") (attr el "x"))]
-
-										(swap! current assoc :status 
-											(if (= "free" (@current :status)) "pending" "free"))))
-			 	:class (do 
-			 							
-			 				(when (= "pending" (get @current :status))
-								(swap! renders inc)
-								;(.warn js/console (.now js/Date))
-			 					)
-			 				(if-not @current "seat" ["seat" (get @current :status)])
-
-			 				)
-				} ""]))
+	[:div {:x x :y y 
+		 	:class (str "seat " (get @current :status))
+			} ""])
 
 
 (rum/defc seat-col < rum/static [col]
@@ -123,7 +109,18 @@
 (rum/defc seat-plan < rum/cursored rum/cursored-watch [app-state] 
 	(let [seats (rum/cursor app-state [:seats])]
 
-		[:div.seat-plan {:key "root"}
+		[:div.seat-plan {:key "root"
+						 :onClick (fn[e]
+						 	(let [el (.-target e)
+								  id (seat-id (attr el "y") (attr el "x"))]
+						 		(when-not (= "-" id)
+									(let [status (get-in @seats [id :status])]
+										(swap! seats assoc-in [id :status]
+											(condp = status
+												"free" "pending"
+												"pending" "free"))))))
+							}
+
 			[:div#parter {:key "parter"} 
 				(rum/with-props seat-rows parter-rows "left" :rum/key (str "left_" (range-key parter-rows)))
 				(rum/with-props seat-rows parter-rows "right" :rum/key (str "right_" (range-key parter-rows)))
