@@ -59,7 +59,7 @@
 		;; (rum/mount (item-list [1 2 3])  (el "rum-app"))
 		;; (rum/mount (big-component app-state) (el "rum-app-1"))
 
-		(add-watch app-state :render 
+		(add-watch app-state :rendering 
 			(fn [_ _ _ _] 
 				(rum/request-render nfo-comp)
 				(rum/request-render seat-comp))))
