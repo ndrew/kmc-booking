@@ -276,6 +276,11 @@ button {
   user-select: none;
 }
 
+.pending {
+  background-color: red;
+
+}
+
 .seat:hover {
   cursor: pointer;
   /*cursor:crosshair;*/
