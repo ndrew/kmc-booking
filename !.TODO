@@ -1,13 +1,15 @@
 
 frontend:
-  ☐ layout
+  ✔ layout @done (15-05-07 23:39)
   ☐ form for entering data
     ☐ validation
+  ☐ performance
 
 system:
- ☐ use global seats atom
+ ✔ use global seats atom @done (15-05-07 23:50)
  ☐ db
-   
+   ☐ migrations via test table
+
  ☐ poll for changes (keep-alive)
  
 admin:
