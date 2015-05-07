@@ -11,6 +11,8 @@
 	(.getAttribute el n))
 
 
+(defn- range-key [r] 
+    [(first r) (last r)])
 
 ;;;;;
 
@@ -53,10 +55,18 @@
 	(into [:div] (map #(vector :div.col_num [:div {:key %} %]) range)))
 
 
+(rum/defc seat-row < rum/static [row]
+	[:div.row_num 
+		[:div {:key row} row]
+		]
+	)
+
 (rum/defc seat-rows < rum/static [range class]
 	(into [:div.rows {:class class}]
-		 	[[:div.col_num [:div {:__html "&nbsp;"}]]
-		 	(map #(vector :div.row_num [:div %]) range)]))
+		 	[[:div.col_num {:key "spacer"} [:div {:__html "&nbsp;" :key 0}]]
+		 	(map 
+		 		#(rum/with-props seat-row % :rum/key %)
+		 		range)]))
 
 
 
@@ -94,27 +104,30 @@
 
 	      beletage_last_cols (range 1 26)
 	      beletage_last_rows (range 21 22)
+		
+	      parter-rows (range 1 14)
 		]
 
-		[:div.seat-plan 
-			[:div#parter 
-				(seat-rows (range 1 14) "left")
-				(seat-rows (range 1 14) "right")
+		[:div.seat-plan {:key "root"}
+			[:div#parter {:key "parter"} 
+				(rum/with-props seat-rows parter-rows "left" :rum/key (str "left_" (range-key parter-rows)))
+				(rum/with-props seat-rows parter-rows "right" :rum/key (str "right_" (range-key parter-rows)))
 
 				(seat-block [:div#left_side_house.side_house] side_rows left_side_cols seats)
 				(seat-block [:div#left_house.house] house_rows left_house_cols seats)
 				(seat-block [:div#right_house.house] house_rows right_house_cols seats)
 				(seat-block [:div#right_side_house.side_house] side_rows right_side_cols seats)
 				]
-			[:div#back_house
-				(seat-rows (range 14 21) "left")
-				(seat-rows (range 14 21) "right")
-				
-				(seat-block [:div#beletage] back_house_rows beletage_cols seats)]
+			[:div#back_house {:key "back_house"}
+				(rum/with-props seat-rows house_rows "left" :rum/key (str "left_" (range-key house_rows)))
+				(rum/with-props seat-rows house_rows "right" :rum/key (str "right_" (range-key house_rows)))
 
-			[:div#last_row
-				(seat-rows (range 21 22) "left")
-				(seat-rows (range 21 22) "right")
+				(seat-block [:div#beletage] back_house_rows beletage_cols seats)
+				]
+
+			[:div#last_row {:key "last_row"}
+				(rum/with-props seat-rows beletage_last_rows "left" :rum/key (str "left_" (range-key beletage_last_rows)))
+				(rum/with-props seat-rows beletage_last_rows "right" :rum/key (str "right_" (range-key beletage_last_rows)))
 
 				(seat-block [:div#beletage_last_row] beletage_last_rows beletage_last_cols seats)
 				]
