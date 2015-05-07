@@ -1,8 +1,10 @@
 (ns ^:figwheel-always kmc-booking.components
   (:require [sablono.core :as sab]
-  			[rum :as rum]
-  	))
+  			[rum :as rum]))
 
+;;;;;
+;
+; helpers
 
 (defn seat-id [y x] 
 	(str y "-" x))
@@ -13,16 +15,27 @@
 (defn- range-key [r] 
     [(first r) (last r)])
 
-;;;;;
 
-(def renders (atom 0))
+(defn seats-by-status [seats status ]
+	(filter 
+   		(fn [[k {s :status}]]
+     				(= status s)) @seats))
+
+(defn new-status [seats id]
+	(let [status (get-in @seats [id :status])]
+		(condp = status
+			"free" "pending"
+			"pending" "free")))
+
+;;;;;
+;
+; debug
+;
 
 
 (rum/defc booking-info [app-state] ;;  < rum/cursored
 	(let [seats (rum/cursor app-state [:seats])
-		  booked (filter 
-   					(fn [[k {status :status}]]
-     					(= "pending" status)) @seats)]
+		  booked (seats-by-status seats "pending")]
 		[:div 
 			[:pre (pr-str booked)]
 		[:hr]
@@ -31,19 +44,16 @@
 				(swap! app-state assoc-in [:seats (.prompt js/window "use row-seat format like '1-39'" "1-39") :status] 
 					"pending")
 				)} "piy!"]
-		[:hr]
-		[:pre (str "renders: " (pr-str @renders))]
 		]
 	)
 )
 
 ;;;
+;
+; seating scheme components
+;
 
-
-(rum/defc seat < rum/cursored  [y x current] ;; < rum/cursored-watch
-	(when (= "pending" (get @current :status))
-			(swap! renders inc))
-
+(rum/defc seat < rum/cursored [y x current] 
 	[:div {:x x :y y 
 		 	:class (str "seat " (get @current :status))
 			} ""])
@@ -51,9 +61,7 @@
 
 (rum/defc seat-col < rum/static [col]
 	[:div.col_num 
-		[:div {:key col} col]
-		]
-	)
+		[:div {:key col} col]])
 
 
 (rum/defc seat-cols < rum/static [range]
@@ -114,11 +122,7 @@
 						 	(let [el (.-target e)
 								  id (seat-id (attr el "y") (attr el "x"))]
 						 		(when-not (= "-" id)
-									(let [status (get-in @seats [id :status])]
-										(swap! seats assoc-in [id :status]
-											(condp = status
-												"free" "pending"
-												"pending" "free"))))))
+									(swap! seats assoc-in [id :status] (new-status seats id)))))
 							}
 
 			[:div#parter {:key "parter"} 
