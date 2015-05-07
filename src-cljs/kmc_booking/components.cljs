@@ -112,24 +112,19 @@
 )		
 
 
+(defonce parter-rows (range 1 14))
+(defonce side_rows (range 1 12))
+(defonce back_house_rows (range 14 21))
+(defonce left_side_cols (reverse (range 37 40)))
+(defonce right_side_cols (reverse (range 1 4)))
+(defonce left_house_cols (reverse (range 20 37)))
+(defonce right_house_cols (reverse (range 4 20))) 		
+(defonce beletage_cols (range 1 32))
+(defonce beletage_last_cols (range 1 26))
+(defonce beletage_last_rows (range 21 22))
+
 (rum/defc seat-plan < rum/cursored-watch [app-state]
-	(let [seats (rum/cursor app-state [:seats])
-
-	      parter-rows (range 1 14)
-		  side_rows (range 1 12)
-		  back_house_rows (range 14 21)
-
-		  left_side_cols (reverse (range 37 40))
-		  right_side_cols (reverse (range 1 4))
-		  left_house_cols (reverse (range 20 37))
-		  right_house_cols (reverse (range 4 20)) 		
-
-	      beletage_cols (range 1 32)
-
-	      beletage_last_cols (range 1 26)
-	      beletage_last_rows (range 21 22)
-		
-		]
+	(let [seats (rum/cursor app-state [:seats])]
 
 		[:div.seat-plan {:key "root"}
 			[:div#parter {:key "parter"} 
