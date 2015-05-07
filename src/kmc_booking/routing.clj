@@ -51,11 +51,19 @@
   #_(pr-str (db/get-seats))
   #_(pr-str (str "Booking created: " (db/create-booking "Test User" "093777764" [])))
 
-  (str 
+
+
+  #_(str 
     (pr-str @core/seats)
     "<hr>"
     (pr-str (db/get-test-data))
     )
+
+  #_(pr-str (db/migrate-live! "test"
+      (fn []
+        "test")))
+
+  ""
 
 )
 

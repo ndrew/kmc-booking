@@ -2,10 +2,6 @@
 	(:require [clojure.java.jdbc :as sql]))
 
 
-(def bookings-table "bookings")
-(def seats-table "seats")
-(def testing-table "testing")
-
 (defn gen-id [] (str (java.util.UUID/randomUUID)))
 
 (def CONN 
@@ -40,6 +36,14 @@
                        "where table_name=  ?") table])
       first :count pos?))
 
+(defn migrate-live! [id cb]
+	(sql/with-db-connection [c CONN] 
+		(when-not (seq (sql/query c
+                  		["select * from testing where data = ?" id]))
+
+			(cb)
+			(sql/insert! c :testing {:data id}))))
+
 
 (defn drop-table! [table]
 	(sql/with-db-connection [c CONN] 
@@ -57,42 +61,55 @@
 ;; seats
 
 (defn create-seats-table [] 
-	(let [t (keyword seats-table)]
-		(sql/with-db-connection [c CONN] 
-			(sql/db-do-commands c
-	                     (sql/create-table-ddl t
-	                                            [:id "varchar(10)" :primary :key]
-	                                            [:status "varchar(20)"]
-	                                            [:booking_id "varchar(32)"]))
-			(apply sql/insert! c t 
-				(gen-seats-data seat-schema)))))
+	(sql/with-db-connection [c CONN] 
+		(sql/db-do-commands c
+	                    (sql/create-table-ddl "seats"
+	                                           [:id "varchar(10)" :primary :key]
+	                                           [:status "varchar(20)"]
+	                                           [:booking_id "varchar(32)"]))
+		(apply sql/insert! c "seats" 
+			(gen-seats-data seat-schema))))
 
 (defn create-bookings-table [] 
-	(let [t (keyword bookings-table)]
-		(sql/with-db-connection [c CONN] 
-		
-			(sql/db-do-commands c
-	                     (sql/create-table-ddl t
-	                                            [:id "varchar(48)" :primary :key]
-	                                            [:name "varchar(128)"]
-	                                            [:phone "varchar(16)"]
-	                                            [:date :timestamp :default :current_timestamp]))
-		)	
-	)
-)
+	(sql/with-db-connection [c CONN] 
+		(sql/db-do-commands c
+	                    (sql/create-table-ddl "bookings"
+	                                           [:id "varchar(48)" :primary :key]
+	                                           [:name "varchar(128)"]
+	                                           [:phone "varchar(16)"]
+	                                           [:date :timestamp :default :current_timestamp]))))
+
+
+;;;;;;;;;;;;;;;
+;;
+;; migrations
+
+(defn- migrate__reinit_seats![]
+	(sql/with-db-connection [c CONN] 
+		(sql/delete! c "seats" ["1 = 1"])
+		(apply sql/insert! c "seats" 
+			(gen-seats-data seat-schema))))
 
 
 (defn init-db[] 
-	(when-not (migrated? testing-table)
+	(when-not (migrated? "testing")
 		(create-testing-table))
 
-	(when-not (migrated? seats-table)
+	(when-not (migrated? "seats")
 		(create-seats-table))
 
-	(when-not (migrated? bookings-table)
+	(when-not (migrated? "bookings")
 		(create-bookings-table))
 
+	(migrate-live! "1_reinit_seats" migrate__reinit_seats!)
+
 )
+
+
+
+
+
+
 
 
 ;;;;;;;;;
@@ -108,13 +125,13 @@
 (defn get-seats []
 	(sql/with-db-connection [c CONN] 
 		(sql/query c
-                  [(str "select * from " seats-table)])))
+                  ["select * from seats"])))
 
 
 (defn get-bookings []
 	(sql/with-db-connection [c CONN] 
 		(sql/query c
-                  [(str "select * from " bookings-table)])))
+                  ["select * from bookings"])))
 
 
 
@@ -125,7 +142,7 @@
 (defn create-booking [name phone seats]
 	(let [booking-id (gen-id)]
 		(sql/with-db-connection [c CONN] 
-			(sql/insert! c bookings-table
+			(sql/insert! c "bookings"
 	                  {
 	                  	:id booking-id
 	                  	:name name
