@@ -24,13 +24,12 @@
    					(fn [[k {status :status}]]
      					(= "pending" status)) @seats)]
 		[:div 
-			[:pre (pr-str booked)]
+			[:pre (pr-str (sort booked))]
 		[:hr]
 		[:button {:onClick (fn[e] 
-			(.warn js/console (.now js/Date))
-			(swap! app-state assoc-in [:seats "21-1" :status] 
+			(swap! app-state assoc-in [:seats (.prompt js/window "use row-seat format like '1-39'" "1-39") :status] 
 				"pending")
-			)} "piy!"]
+			)} "book by changing state!"]
 		[:hr]
 		[:pre (str "renders: " (pr-str @renders))]
 		]

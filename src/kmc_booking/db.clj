@@ -10,7 +10,7 @@
 
 (def CONN 
 	(or (System/getenv "DATABASE_URL")
-		"postgresql://postgres:postgres@localhost:5432/misskma"))
+		"postgresql://postgres:postgres@localhost:5432/misskma111"))
 
 
 (def seat-schema  ;; [[row-start col-start] [row-end col-end]]

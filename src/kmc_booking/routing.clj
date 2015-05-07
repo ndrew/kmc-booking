@@ -75,8 +75,9 @@
 
 
 (defroutes routes
-  (GET "/" [] (ring/redirect "landing/index.html"))
-  ;(GET  "/" [] (index))
+  ;(GET "/" [] (ring/redirect "landing/index.html"))
+  (GET  "/" [] (ring/redirect "bookings.html"))
+  
   (GET "/booking" [] (booking))
 
   (friend/logout (ANY "/logout" request 

@@ -46,8 +46,12 @@
 
 
 (defn init[] 
-  (db/init-db)
-  (core/init-seats! (db/get-seats)))
+  ;(db/init-db)
+  ;(core/init-seats! (db/get-seats))
+
+  (core/init-seats! (db/gen-seats-data db/seat-schema))
+
+  )
 
 
 
