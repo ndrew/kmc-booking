@@ -125,6 +125,15 @@
 				data))))
 
 
+(defn cancel-booking [booking-id]
+	(println (str "deleting " booking-id))
+	(sql/with-db-connection [c CONN] 
+		(sql/delete! c "history" ["booking_id = ?" booking-id ])
+		(sql/update! c "seats" {:status "free" :booking_id nil} ["booking_id = ?" booking-id])
+		(sql/delete! c "bookings" ["id = ?" booking-id ])
+
+		))
+
 
 
 ;; TODO: trasaction

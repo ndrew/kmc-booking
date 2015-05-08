@@ -67,17 +67,23 @@
 ; entry point for admin
 ;
 
-(defn admin-app[]
+(defn admin-load-data[] 
 	(ajax "/api/bookings" 
 		(fn [data]
 				(if (and (map? data) (:error data))
 					(swap! app-state assoc :error (:error data))
-					(swap! app-state assoc :bookings data))) "GET")
+					(swap! app-state assoc :bookings data))) "GET"))
+
+(defn admin-app[]
+	(swap! app-state assoc :reload-fn admin-load-data)
 
 	(let [admin-comp    (rum/mount (c/admin-panel app-state) (el "admin"))]
 		(add-watch app-state :rendering 
 				(fn [_ _ _ _] 
-					(rum/request-render admin-comp)))))
+					(rum/request-render admin-comp))))
+
+	((get @app-state :reload-fn)) 
+	)
 
 (defn ^:export start[]
 	(enable-console-print!)
@@ -85,7 +91,8 @@
 	(let [u (.. js/window -location -pathname)]
 		(if (= "/admin" u)
 			(admin-app)
-			(booking-app) ;(admin-app)
+			(booking-app)
+			;(admin-app)
 		)))
 
 (set! (.-onload js/window) start)

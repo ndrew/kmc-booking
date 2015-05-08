@@ -600,6 +600,9 @@ button.disabled {
   display: none;
 }
 
+.booking-line button {
+  margin-left: 1rem;
+}
 
 
 

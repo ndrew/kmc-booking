@@ -112,6 +112,20 @@
 )
 
 
+(defn admin-discard[req]
+  (if (friend/current-authentication)
+    (do 
+      ;(db/get-bookings)
+      (let [{{id :booking_id} :params} req]
+          (db/cancel-booking id)
+          id
+        )
+      )
+    {:error "Forbidden"}
+    )
+)
+
+
 (defroutes api 
   (wrap-transit-response 
     (compojure.core/context "/api" []
@@ -122,6 +136,9 @@
 
           (GET "/bookings" [] {:body (admin-bookings)
                                :transit true})
+
+          (POST "/discard" req {:body (admin-discard req)
+                                :transit true})
           
 
           )

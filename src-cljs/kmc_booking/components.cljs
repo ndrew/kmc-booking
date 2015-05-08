@@ -320,7 +320,7 @@ or a formatting string like \"dd MMMM yyyy\""
 ))
 
 
-(rum/defc admin-booking [booking [actual-seats history-seats]]
+(rum/defc admin-booking [booking [actual-seats history-seats] app-state]
   (let [{id :id
   		 name :name
   		 phone :phone
@@ -362,9 +362,25 @@ or a formatting string like \"dd MMMM yyyy\""
   								(.log js/console "Foo"))}
   		 "викуплено!"])
 
-  	#_(if is-pending? 
+  	(if is-pending? 
   		[:button {:onClick (fn[e] 
-  								(.log js/console "Bar")
+  				(let [url (str "/api/discard" 
+									"?booking_id=" (js/encodeURIComponent id))]
+
+  					(if (.confirm js/window "Видалити?")
+  						(ajax url (fn[res]
+								(if (map? res)
+									(do
+										(println (get res :error "Сталась помилка!"))
+										;(reset! error (get res :error "Сталась помилка!")))
+										)
+									(do
+										((get @app-state :reload-fn))
+										;;(println res)
+										;; call refresh
+									))) "POST")
+  						)
+					)
   		)} "скасувати"])
 
   	(if is-paid? 
@@ -385,7 +401,7 @@ or a formatting string like \"dd MMMM yyyy\""
 			(if @bookings 
 				(into [:div] 
 					(map (fn[[booking seats]]
-							(rum/with-props admin-booking booking seats :rum/key (:id booking)))
+							(rum/with-props admin-booking booking seats app-state :rum/key (:id booking)))
 					@bookings))
 
 				)
