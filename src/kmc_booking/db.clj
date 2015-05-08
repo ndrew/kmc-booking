@@ -51,7 +51,7 @@
 	                     (sql/drop-table-ddl table))))
 
 
-(defn create-testing-table[]
+(defn create-testing-table! []
 	(sql/db-do-commands CONN
 	                    (sql/create-table-ddl :testing [:data :text]))
 		(sql/insert! CONN
@@ -60,7 +60,7 @@
 
 ;; seats
 
-(defn create-seats-table [] 
+(defn create-seats-table! [] 
 	(sql/with-db-connection [c CONN] 
 		(sql/db-do-commands c
 	                    (sql/create-table-ddl "seats"
@@ -70,7 +70,7 @@
 		(apply sql/insert! c "seats" 
 			(gen-seats-data seat-schema))))
 
-(defn create-bookings-table [] 
+(defn create-bookings-table! [] 
 	(sql/with-db-connection [c CONN] 
 		(sql/db-do-commands c
 	                    (sql/create-table-ddl "bookings"
@@ -80,37 +80,15 @@
 	                                           [:date :timestamp :default :current_timestamp]))))
 
 
-;;;;;;;;;;;;;;;
-;;
-;; migrations
-
-(defn- migrate__reinit_seats![]
+(defn create-history-table! []
 	(sql/with-db-connection [c CONN] 
-		(sql/delete! c "seats" ["1 = 1"])
-		(apply sql/insert! c "seats" 
-			(gen-seats-data seat-schema))))
-
-
-(defn init-db[] 
-	(when-not (migrated? "testing")
-		(create-testing-table))
-
-	(when-not (migrated? "seats")
-		(create-seats-table))
-
-	(when-not (migrated? "bookings")
-		(create-bookings-table))
-
-	(migrate-live! "1_reinit_seats" migrate__reinit_seats!)
-
-)
-
-
-
-
-
-
-
+		(sql/db-do-commands c
+	                    (sql/create-table-ddl "history"
+	                                           [:booking_id "varchar(48)"]
+	                                           [:seat "varchar(10)"]
+	                                           [:status "varchar(20)"]
+	                                           [:date :timestamp :default :current_timestamp]
+	                                           ))))
 
 ;;;;;;;;;
 ;; DML
@@ -153,6 +131,53 @@
 		booking-id
 	)
 )
+
+
+;;;;;;;;;;;;;;;
+;;
+;; migrations
+
+(defn- migrate__reinit_seats! []
+	(sql/with-db-connection [c CONN] 
+		(sql/delete! c "seats" ["1 = 1"])
+		(apply sql/insert! c "seats" 
+			(gen-seats-data seat-schema))))
+
+(defn- migrate__seats_for_judges! []
+	(create-booking "ЖУРІ" "-" [])
+	)
+
+
+(defn init-db[] 
+	(when-not (migrated? "testing")
+		(create-testing-table!))
+
+	(when-not (migrated? "seats")
+		(create-seats-table!))
+
+	(when-not (migrated? "bookings")
+		(create-bookings-table!))
+
+	(when-not (migrated? "history")
+		(create-history-table!))
+	
+	;(try
+	;	...
+	;	(catch Exception e 
+	;		(do 
+	;			(print (.getNextException e)))))
+
+	(migrate-live! "1_reinit_seats" migrate__reinit_seats!)
+
+	;(migrate-live! "2_seats_for_judges"  migrate__seats_for_judges!)
+
+)
+
+
+
+
+
+
 
 
 
