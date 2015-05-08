@@ -279,9 +279,7 @@
 						}
 						"Придбати"]
 
-					(if-not (and 
-								(can-select-more? booked)
-							(not (or @error @success))) [:div.info-message (str "Ми продаємо не більше " MAX_SEATS " квитків в одні руки! Звиняйте")])
+					(if-not (can-select-more? booked) [:div.info-message (str "Ми продаємо не більше " MAX_SEATS " квитків в одні руки! Звиняйте")])
 					(if @error  [:div.error-message @error])]
 
 				

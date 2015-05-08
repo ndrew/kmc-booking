@@ -541,9 +541,7 @@ button {
 }
 
 #form .info-message {
-  font-style: oblique;
-  font-size: smaller;
-  margin-top: 1rem;
+  font-weight: bold;
 }
 
 #form .error-message {
