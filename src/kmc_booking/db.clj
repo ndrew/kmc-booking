@@ -120,7 +120,7 @@
 (defn create-booking [name phone seats]
 	(let [booking-id (gen-id)
 		  records (for [rows (range 3 4)
-                 	  cols (range 1 40)]
+                 	  cols (range 4 37)]
                       {:id (str rows "-" cols)
                        :status "paid"
                        :booking_id booking-id})]
