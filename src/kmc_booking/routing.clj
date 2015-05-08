@@ -78,8 +78,9 @@
 
 
 (defn admin[]
-  "I rule everything!"
-  )
+  ;(friend/current-authentication)
+  (io/resource "admin.html")
+)
 
 
 (defroutes routes
@@ -92,8 +93,7 @@
 
   (GET "/admin" req 
     (friend/authenticated 
-      (str "You have successfully authenticated as "
-                                  (friend/current-authentication))))
+      (admin)))
 
   (compojure.core/context "/api" []
     (wrap-transit-response 
