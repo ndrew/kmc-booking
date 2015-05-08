@@ -582,3 +582,16 @@ button.disabled {
   margin: 1rem;
 
 } 
+
+.booking-line:nth-child(even) {
+  background-color: rgba(128,129,129,0.1);  
+}
+
+.booking-line .date, .booking-line .name, .booking-line .phone {
+  margin-right: 1rem;
+}
+
+.booking-line > span {
+  display: inline-block;
+  width: 400px;
+}
