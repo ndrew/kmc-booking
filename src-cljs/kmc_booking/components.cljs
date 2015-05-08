@@ -21,8 +21,10 @@
    		(fn [[k {s :status}]]
      				(= status s)) @seats))
 
+(def MAX_SEATS 7)
+
 (defn- can-select-more? [seats]
-	(> 3 (count seats)))
+	(> MAX_SEATS (count seats)))
 
 (defn new-status [seats id]
 	(let [status (get-in @seats [id :status])]
@@ -176,8 +178,10 @@
 		  booked (seats-by-status seats "your")]
 		(when (seq booked)
 			(if (can-select-more? booked)
-				[:div "MOAR"]
-				[:div "NO WAY"]
+				[:div (pr-str booked)
+					[:button#book "Придбати"]
+					]
+				[:div.message (str "Продаємо не більше " MAX_SEATS " квитків в одні руки!")]
 				)
 			;[:div (pr-str booked)]
 			)
