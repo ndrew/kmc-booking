@@ -2,7 +2,7 @@
   (:require [sablono.core :as sab]
   			[rum :as rum]
   			[clojure.string :as string]
-  			[kmc-booking.util :refer [ajax-post]]
+  			[kmc-booking.util :refer [ajax]]
   			))
 
 ;;;;;
@@ -203,8 +203,8 @@
 			row (js/parseInt r)
 			col (js/parseInt c)
 		]
-			(if (or (< row 4)
-					(> row 36))
+			(if (or (< col 4)
+					(> col 36))
 				70
 				85
 			)
@@ -244,11 +244,8 @@
 									"")
 						 :onClick (fn[e]
 						 	(when valid? 
-						 		(ajax-post "/booking" (fn []
-						 			(js/alert "In progress!")
-
-						 			;(println "yo")
-						 			))
+						 		(ajax "/api/book?foo=bar" 
+						 			nil "POST")
 
 
 						 		)

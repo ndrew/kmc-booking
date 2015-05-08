@@ -1,7 +1,7 @@
 (ns ^:figwheel-always kmc-booking.core 
   (:require [kmc-booking.components :as c]
   			[rum :as rum]
-  			[kmc-booking.util :refer [el ajax-transit]]
+  			[kmc-booking.util :refer [el ajax]]
   			[cognitect.transit :as transit])
     (:import
     	goog.net.XhrIo))
@@ -30,7 +30,7 @@
 ; api
 
 (defn load-data[]
-	(ajax-transit "/api/seats" (fn [seats]
+	(ajax "/api/seats" (fn [seats]
 		(swap! app-state assoc :seats seats)) "GET"))
 
 (defn book[]

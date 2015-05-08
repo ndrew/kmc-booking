@@ -4,6 +4,8 @@ iteration 1:
     ✔ 1.2 logo @done (15-05-08 03:33)
     ✔ 1.3 statuses  @done (15-05-08 03:33)
     1.4 booking request
+      ? post request - how to pass params
+
   2. landing
     2.1 add video to the landing page
     2.2 add booking button on the landing page
@@ -11,7 +13,10 @@ iteration 1:
     1. present all the bookings
     2. confirm selected booking
     3. delete selected booking
-4. updates via web-socket
+
+    4. how to secure ajax calls?
+    
+4. updates via web-socket or 
 
 5. адмінство 
   ✔ забронювати @done (15-05-08 04:43)

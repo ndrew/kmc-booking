@@ -3,6 +3,9 @@
 	          [ring.adapter.jetty :as ring]
 	          [compojure.route :as route]
 	          [compojure.handler :as handler]
+            
+            [ring.middleware.params :as params]
+
             [kmc-booking.routing :as rounting]
             [kmc-booking.db :as db]
             [kmc-booking.core :as core]
@@ -25,7 +28,10 @@
 ); (route/not-found (layout/four-oh-four))
 
 
-(def app* (handler/site routes))
+(def app* (-> 
+            (handler/site routes)
+            (params/wrap-params)
+            ))
 
 
 (def users (atom {"admin" {:username "admin"

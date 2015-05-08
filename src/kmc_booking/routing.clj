@@ -35,14 +35,13 @@
 
 
 (defn booking [req]
-  ;(println req)
-  ; 
-  "!!!!"
+  (let [{params :params} req]
+      params
+    )
 )
 
 
 (defn seats []
-
   (when (empty? @core/seats) ;; for figwheel
     (core/init-seats! (db/get-seats)))
 
@@ -69,9 +68,10 @@
     (friend/authenticated 
       (admin)))
 
-  (compojure.core/context "/api" []
-    (wrap-transit-response 
-        (GET "/seats" request {:body (seats)})))
-   
+  (wrap-transit-response 
+    (compojure.core/context "/api" []
+          (GET "/seats" [] {:body (seats)})
+          (POST "/book" req {:body (booking req)})))
+
 )
 
