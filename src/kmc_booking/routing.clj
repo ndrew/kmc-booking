@@ -43,7 +43,7 @@
 
 (defn booking [req]
   ;; 
-  (core/init-seats! (db/get-seats))
+  ;(core/init-seats! (db/get-seats))
   
   (let [{{name :name
           phone :phone
@@ -53,12 +53,12 @@
         (try
           (do 
             (doseq [id seats]
-                (println (pr-str (get @core/seats id)))
+                ;(println (pr-str (get @core/seats id)))
 
                 (when-not (get @core/seats id)
                     (throw (Exception. (str "Немає місця " id))))
 
-                (println (pr-str (get-in @core/seats [id :status])))
+                ;(println (pr-str (get-in @core/seats [id :status])))
 
                 (when-not (= "free" (get-in @core/seats [id :status]))
                     (throw (Exception. (str "Хтось замовив місце " id " швидше!")))))
@@ -123,6 +123,7 @@
           (GET "/bookings" [] {:body (admin-bookings)
                                :transit true})
           
+
           )
 
     )

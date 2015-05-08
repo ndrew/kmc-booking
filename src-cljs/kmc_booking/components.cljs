@@ -331,14 +331,19 @@ or a formatting string like \"dd MMMM yyyy\""
   		 	 	(= "pending" (:status a))))
 		 paid? (partial every? #(= "paid" (:status %)))
 
-
+		 is-pending? (pending? actual-seats)
+		 is-paid? (paid? actual-seats)
   		 ]
 
   [:div.booking-line
   	[:pre
   		(str 
-  			"actual:  " "pending=" (pending? actual-seats) "; paid=" (paid? actual-seats)  "\n"
-  			"history: " "pending=" (pending? history-seats) "; paid=" (paid? history-seats)
+  			"actual:  " "pending=" is-pending? "; paid=" is-paid?  "\n"
+  			(pr-str actual-seats) "\n"
+
+  			"history: " "pending=" (pending? history-seats) "; paid=" (paid? history-seats) "\n"
+  			(pr-str history-seats)
+
   			) 
   		;(pr-str seats)
 
@@ -349,17 +354,17 @@ or a formatting string like \"dd MMMM yyyy\""
   		[:span.phone phone] 
   	] 
   	
-  	#_(if pending?
+  	(if is-pending?
   		[:button {:onClick (fn[e] 
   								(.log js/console "Foo"))}
   		 "викуплено!"])
 
-  	#_(if pending? 
+  	(if is-pending? 
   		[:button {:onClick (fn[e] 
   								(.log js/console "Bar")
   		)} "скасувати"])
 
-  	#_(if paid? 
+  	(if is-paid? 
   		[:span "ВИКУПЛЕНО"]
   		)
 
