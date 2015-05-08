@@ -120,7 +120,7 @@
 (defn create-booking [name phone seats]
 	(let [booking-id (gen-id)
 		  records (map (fn[id] {:id id
-		              :status "paid"
+		              :status "pending"
 		              :booking_id booking-id}) seats)]
 
 		(sql/with-db-connection [c CONN] 

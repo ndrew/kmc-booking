@@ -58,9 +58,8 @@
                     (throw (Exception. (str "seat " id " is in " (get-in @core/seats [id :status]))))))
 
             (let [booking-id (db/create-booking name phone seats)]
-
               (doseq [id seats]
-                (core/seat-booked! id booking-id))
+                (core/seat-booked! id booking-id "pending"))
 
               booking-id))
         (catch Exception e 
@@ -71,7 +70,10 @@
   (when (empty? @core/seats) ;; for figwheel
     (core/init-seats! (db/get-seats)))
 
+  ;(print (pr-str (db/get-seats)))
+  ;; serve from memory!
   @core/seats
+
 )
 
 
@@ -85,8 +87,6 @@
   (GET "/" [] (ring/redirect "landing/index.html"))
   ;(GET  "/" [] (index))
   
-  (POST "/booking" req (booking req))
-
   (friend/logout (ANY "/logout" request 
                               (ring/redirect "/")))
 

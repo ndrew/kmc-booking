@@ -48,6 +48,8 @@
 		  header-comp (rum/mount (c/header)                 (el "header"))
 		  form-comp   (rum/mount (c/form app-state) 		(el "form"))]
 
+		(swap! app-state assoc :reload-fn load-data)
+
 		(add-watch app-state :rendering 
 			(fn [_ _ _ _] 
 				;(rum/request-render nfo-comp)

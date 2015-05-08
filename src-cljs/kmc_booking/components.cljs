@@ -252,7 +252,10 @@
 						 :onClick (fn[e]
 						 	(when valid? 
 						 		(ajax url 
-						 			nil "POST")
+						 			(fn[d] 
+						 				;(.warn js/console (pr-str d))
+						 				((get @app-state :reload-fn))
+						 				) "POST")
 
 
 						 		)

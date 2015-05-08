@@ -11,5 +11,6 @@
 				 ) {} db-seats)))
 
 
-(defn seat-booked! [id booking-id]
-	(swap! seats assoc-in [id :booking_id] booking-id))
+(defn seat-booked! [id booking-id status]
+	(swap! seats update-in [id] merge {:booking_id booking-id :status status}))
+
