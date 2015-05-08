@@ -177,6 +177,8 @@
 			(gen-seats-data seat-schema))))
 
 (defn migrate__seats_for_judges! []
+	(drop-table! "seats")
+	(create-seats-table!)
 	(create-booking "ЖУРІ & передзамовлення" "-" [])
 	)
 
