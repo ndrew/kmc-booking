@@ -275,27 +275,32 @@ button {
   user-select: none;
 
 
-  background-color: #dbdbdb;
+  background-color: #dadada;
 }
 
 /* statuses */
-
-.pending {
-  background-color: gray;
-}
-
-.paid {
-  background-color: rgba(255,254,254,0.1);
-}
-
-.your {
-  background-color: #40d7d2;
-}
 
 .seat:hover {
   cursor: pointer;
   /*cursor:crosshair;*/
 }
+
+.pending {
+  background-color: rgba(128,128,128,0.5);
+}
+
+.paid {
+  background-color: rgba(28,160,158,0.2);
+}
+
+.paid:hover {
+    cursor: default;
+}
+
+.your {
+  background-color: #44d7d2;
+}
+
 
 #scheme {
 	margin-left: 40px;
