@@ -17,7 +17,7 @@
               )
   (:import
       [java.io ByteArrayOutputStream ByteArrayInputStream])
-  )
+)
 
 
 (defn write-transit-bytes [x]
@@ -25,6 +25,7 @@
         w    (transit/writer baos :json {})]
     (transit/write w x)
     (.toByteArray baos)))
+
 
 (defn wrap-transit-response [handler]
   (fn [request]
@@ -41,15 +42,29 @@
 
 
 (defn booking [req]
-  (let [{params :params} req
-         {name :name
+  (let [{{name :name
           phone :phone
-          seats :seats} params]
+          seats :seats} :params} req
+          seats (clojure.string/split seats #";")]
       
-      (str "name=" name "; phone=" phone )
-      ;params
-    )
-)
+
+        (try
+          (do 
+            (doseq [id seats]
+                (when-not (get @core/seats id)
+                    (throw (Exception. (str "no such seat - " id))))
+
+                (when-not (= "free" (get-in @core/seats [id :status]))
+                    (throw (Exception. (str "seat " id " is in " (get-in @core/seats [id :status]))))))
+
+            (let [booking-id (db/create-booking name phone seats)]
+
+              (doseq [id seats]
+                (core/seat-booked! id booking-id))
+
+              booking-id))
+        (catch Exception e 
+          {:error (.getMessage e)}))))
 
 
 (defn seats []

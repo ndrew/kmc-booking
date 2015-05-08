@@ -119,33 +119,9 @@
 ;; TODO: Update seats with status 
 (defn create-booking [name phone seats]
 	(let [booking-id (gen-id)
-		  records (concat 
-		  			(for [rows (range 3 4)
-                 	  cols (range 4 37)]
-                      {:id (str rows "-" cols)
-                       :status "paid"
-                       :booking_id booking-id})
-
-		  			(for [rows (range 1 3)
-                          cols (range 1 4)]
-                      {:id (str rows "-" cols)
-                       :status "paid"
-                       :booking_id booking-id})
-
-		  			(for [rows (range 1 3)
-                          cols (range 37 40)]
-                      {:id (str rows "-" cols)
-                       :status "paid"
-                       :booking_id booking-id})
-
-		  			(for [rows (range 11 12)
-                          cols (range 20 26)]
-                      {:id (str rows "-" cols)
-                       :status "paid"
-                       :booking_id booking-id})
-		  			)
-
-		  			]
+		  records (map (fn[id] {:id id
+		              :status "paid"
+		              :booking_id booking-id}) seats)]
 
 		(sql/with-db-connection [c CONN] 
 			(sql/insert! c "bookings"
@@ -159,9 +135,9 @@
 
 			(doseq [r records]
 				(sql/update! c "seats" r ["id = ?" (get r :id)]))
-		)
 
-		
+			booking-id
+		)
 	)
 )
 
@@ -179,8 +155,12 @@
 (defn migrate__seats_for_judges! []
 	(drop-table! "seats")
 	(create-seats-table!)
-	(create-booking "ЖУРІ & передзамовлення" "-" [])
-	)
+	(create-booking "ЖУРІ & передзамовлення" "-" 
+		(concat
+          (for [rows (range 3 4) cols (range 4 37)] (str rows "-" cols))
+          (for [rows (range 1 3) cols (range 1 4)] (str rows "-" cols))
+          (for [rows (range 1 3) cols (range 37 40)] (str rows "-" cols))
+          (for [rows (range 11 12) cols (range 20 26)] (str rows "-" cols)))))
 
 
 (defn init-db[] 

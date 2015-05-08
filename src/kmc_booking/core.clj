@@ -9,3 +9,7 @@
 		(reduce (fn[a v] 
 				   (assoc a (get v :id) (dissoc v :id))
 				 ) {} db-seats)))
+
+
+(defn seat-booked! [id booking-id]
+	(swap! seats assoc-in [id :booking_id] booking-id))
