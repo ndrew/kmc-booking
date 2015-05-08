@@ -119,11 +119,33 @@
 ;; TODO: Update seats with status 
 (defn create-booking [name phone seats]
 	(let [booking-id (gen-id)
-		  records (for [rows (range 3 4)
+		  records (concat 
+		  			(for [rows (range 3 4)
                  	  cols (range 4 37)]
                       {:id (str rows "-" cols)
                        :status "paid"
-                       :booking_id booking-id})]
+                       :booking_id booking-id})
+
+		  			(for [rows (range 1 3)
+                          cols (range 1 4)]
+                      {:id (str rows "-" cols)
+                       :status "paid"
+                       :booking_id booking-id})
+
+		  			(for [rows (range 1 3)
+                          cols (range 37 40)]
+                      {:id (str rows "-" cols)
+                       :status "paid"
+                       :booking_id booking-id})
+
+		  			(for [rows (range 11 12)
+                          cols (range 20 26)]
+                      {:id (str rows "-" cols)
+                       :status "paid"
+                       :booking_id booking-id})
+		  			)
+
+		  			]
 
 		(sql/with-db-connection [c CONN] 
 			(sql/insert! c "bookings"
@@ -155,7 +177,7 @@
 			(gen-seats-data seat-schema))))
 
 (defn migrate__seats_for_judges! []
-	(create-booking "ЖУРІ" "-" [])
+	(create-booking "ЖУРІ & передзамовлення" "-" [])
 	)
 
 
