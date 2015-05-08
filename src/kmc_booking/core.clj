@@ -12,5 +12,7 @@
 
 
 (defn seat-booked! [id booking-id status]
+	(println id booking-id status)
+
 	(swap! seats update-in [id] merge {:booking_id booking-id :status status}))
 

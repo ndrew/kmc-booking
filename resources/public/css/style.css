@@ -596,6 +596,9 @@ button.disabled {
   width: 400px;
 }
 
+.booking-line pre {
+  display: none;
+}
 
 
 

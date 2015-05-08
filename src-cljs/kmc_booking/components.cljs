@@ -353,13 +353,17 @@ or a formatting string like \"dd MMMM yyyy\""
   		[:span.name name]
   		[:span.phone phone] 
   	] 
-  	
-  	(if is-pending?
+	  	
+	(if is-pending?
+		[:span "очікують підтвердження"]
+		)
+
+  	#_(if is-pending?
   		[:button {:onClick (fn[e] 
   								(.log js/console "Foo"))}
   		 "викуплено!"])
 
-  	(if is-pending? 
+  	#_(if is-pending? 
   		[:button {:onClick (fn[e] 
   								(.log js/console "Bar")
   		)} "скасувати"])
