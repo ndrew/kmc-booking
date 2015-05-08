@@ -104,7 +104,8 @@
 (defn admin-bookings[]
   (if (friend/current-authentication)
     (do 
-      {:yo :bitch}
+      (db/get-bookings)
+
       )
     {:error "Forbidden"}
     )

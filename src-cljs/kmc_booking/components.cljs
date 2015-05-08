@@ -294,14 +294,37 @@
 ))
 
 
+(rum/defc admin-booking [booking]
+  (let [{id :id
+  		 name :name
+  		 phone :phone
+  		 date :date
+  		 } booking]
+
+  [:div 
+
+  	[:span {:style {:width "400px" :display "inline-block"}} (str name " (" phone ") ")] 
+  	
+  	[:button "підтвердити"]
+  	[:button "скасувати"]
+
+  	]
+ ))
+
+
 (rum/defc admin-panel < rum/cursored rum/cursored-watch [app-state] 
 	(let [error (rum/cursor app-state [:error])
 		  bookings (rum/cursor app-state [:bookings])] 
 
 		[:div
 			(if @error [:div.error-message @error])
-			
-			(if @bookings [:pre (pr-str @bookings)])
+
+			(if @bookings 
+				(into [:div] 
+					(map #(rum/with-props admin-booking % :rum/key (:id %))
+					@bookings))
+
+				)
 			]
 		)
 	)

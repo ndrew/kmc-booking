@@ -109,7 +109,7 @@
 (defn get-bookings []
 	(sql/with-db-connection [c CONN] 
 		(sql/query c
-                  ["select * from bookings"])))
+                  ["select * from bookings order by date desc"])))
 
 
 
