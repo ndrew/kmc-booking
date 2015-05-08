@@ -66,7 +66,7 @@
 	                    (sql/create-table-ddl "seats"
 	                                           [:id "varchar(10)" :primary :key]
 	                                           [:status "varchar(20)"]
-	                                           [:booking_id "varchar(32)"]))
+	                                           [:booking_id "varchar(48)"]))
 		(apply sql/insert! c "seats" 
 			(gen-seats-data seat-schema))))
 
@@ -85,7 +85,7 @@
 		(sql/db-do-commands c
 	                    (sql/create-table-ddl "history"
 	                                           [:booking_id "varchar(48)"]
-	                                           [:seat "varchar(10)"]
+	                                           [:id "varchar(10)"]
 	                                           [:status "varchar(20)"]
 	                                           [:date :timestamp :default :current_timestamp]
 	                                           ))))
@@ -114,21 +114,32 @@
 
 
 
-;; TODO: Ideally in one trasaction
+;; TODO: trasaction
 ;; TODO: Check seats availability
-;; TODO: Apdate seats with status 
+;; TODO: Update seats with status 
 (defn create-booking [name phone seats]
-	(let [booking-id (gen-id)]
+	(let [booking-id (gen-id)
+		  records (for [rows (range 3 4)
+                 	  cols (range 1 40)]
+                      {:id (str rows "-" cols)
+                       :status "paid"
+                       :booking_id booking-id})]
+
 		(sql/with-db-connection [c CONN] 
 			(sql/insert! c "bookings"
 	                  {
 	                  	:id booking-id
 	                  	:name name
 	                  	:phone phone 
-	                  }
-			)
+	                  })
+
+			(apply sql/insert! c "history" records)
+
+			(doseq [r records]
+				(sql/update! c "seats" r ["id = ?" (get r :id)]))
 		)
-		booking-id
+
+		
 	)
 )
 
@@ -143,7 +154,7 @@
 		(apply sql/insert! c "seats" 
 			(gen-seats-data seat-schema))))
 
-(defn- migrate__seats_for_judges! []
+(defn migrate__seats_for_judges! []
 	(create-booking "ЖУРІ" "-" [])
 	)
 
@@ -169,7 +180,7 @@
 
 	(migrate-live! "1_reinit_seats" migrate__reinit_seats!)
 
-	;(migrate-live! "2_seats_for_judges"  migrate__seats_for_judges!)
+	(migrate-live! "2_seats_for_judges"  migrate__seats_for_judges!)
 
 )
 
