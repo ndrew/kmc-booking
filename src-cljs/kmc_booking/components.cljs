@@ -21,10 +21,13 @@
    		(fn [[k {s :status}]]
      				(= status s)) @seats))
 
+(defn- can-select-more? [seats]
+	(> 3 (count seats)))
+
 (defn new-status [seats id]
 	(let [status (get-in @seats [id :status])]
 		(condp = status
-			"free" "your"
+			"free" (if (can-select-more? (seats-by-status seats "your")) "your" "free")
 			"your" "free"
   			"paid" "paid"
   			"pending" "pending"
@@ -169,7 +172,14 @@
 ; form
 
 (rum/defc form < rum/cursored rum/cursored-watch [app-state] 
-	(let [seats (rum/cursor app-state [:seats])]
-		[:div "yo!"]
+	(let [seats (rum/cursor app-state [:seats])
+		  booked (seats-by-status seats "your")]
+		(when (seq booked)
+			(if (can-select-more? booked)
+				[:div "MOAR"]
+				[:div "NO WAY"]
+				)
+			;[:div (pr-str booked)]
+			)
 		))
 
