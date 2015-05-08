@@ -1,6 +1,7 @@
 (ns ^:figwheel-always kmc-booking.components
   (:require [sablono.core :as sab]
-  			[rum :as rum]))
+  			[rum :as rum]
+  			[clojure.string :as string]))
 
 ;;;;;
 ;
@@ -173,17 +174,90 @@
 ; 
 ; form
 
+(rum/defc input < rum/reactive [label ref fn]
+  [:div.input 
+	  [:label label]
+	  [:input {:type "text"
+           :value (rum/react ref)
+			:class (when-not (fn (rum/react ref))
+                                 	"error")
+
+           :on-change #(reset! ref (.. % -target -value))}]
+
+         ])
+
+(defn ticket-n[n]
+	(condp = n
+		1 " квиток"
+		5 " квитків"
+		6 " квитків"
+		7 " квитків"
+		" квитки"
+		)
+	)
+
+(defn price-by-id [id]
+	(let [[r c] (string/split id #"-")
+			row (js/parseInt r)
+			col (js/parseInt c)
+		]
+			(if (or (< row 4)
+					(> row 36))
+				70
+				85
+			)
+		)
+	)
+
+(defn calc-price [booked]
+	(reduce (fn [p [id _]]
+		(+ (price-by-id id) p)
+			) 0 booked))
+
 (rum/defc form < rum/cursored rum/cursored-watch [app-state] 
 	(let [seats (rum/cursor app-state [:seats])
-		  booked (seats-by-status seats "your")]
-		(when (seq booked)
-			(if (can-select-more? booked)
-				[:div (pr-str booked)
-					[:button#book "Придбати"]
+		  booked (seats-by-status seats "your")
+		  name (rum/cursor app-state [:name])
+		  phone (rum/cursor app-state [:phone])
+		  
+		  ]
+		(if (seq booked)
+			(let [validate-name #(not (string/blank? %))
+				  validate-phone #(not (string/blank? %))
+
+				  valid? (and (validate-name @name)
+							 (validate-phone @phone))
+				  n (count booked)
+				  ]
+				(if (can-select-more? booked)
+					[:div ;(pr-str booked)
+						[:span.price (str n (ticket-n n) ", " (calc-price booked) " грн ")]
+
+						(input "Ім'я" name validate-name)
+						(input "Телефон" phone validate-phone)
+
+					[:button#book 
+						{:class (if-not valid? 
+									"disabled"
+									"")
+						 :onClick (fn[e]
+						 	(when valid? 
+						 		(println "YO!")
+
+						 		)
+						 	)
+						}
+						"Придбати"]
 					]
 				[:div.message (str "Продаємо не більше " MAX_SEATS " квитків в одні руки!")]
 				)
-			;[:div (pr-str booked)]
 			)
+			; else
+			;[:div.info "Виберіть квитки"]
+		)
+
+
 		))
+
+
 

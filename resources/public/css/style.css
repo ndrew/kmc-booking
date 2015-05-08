@@ -248,7 +248,7 @@ h1 {
 
 
 button {
-	padding: 1rem;
+	padding: .5rem;
 }
 
 .seat-plan {
@@ -304,7 +304,7 @@ button {
 
 #scheme {
 	margin-left: 40px;
-  margin-top: 70px;
+  margin-top: 40px;
 }
 
 
@@ -530,8 +530,32 @@ button {
 }
 
 #form {
-  background-color: red;
+  background-color: rgba(128,128,128,0.1);
   width: 70%;
   margin: 1rem auto 0 auto;
   padding: 1rem;
 }
+
+.input {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.input label {
+  margin-right: .5rem; 
+}
+
+.input .error {
+  background-color: rgba(255,15,15,0.3);
+}
+
+span.price {
+  margin-right: 1rem;
+  font-weight: bolder;
+}
+
+button.disabled {
+  opacity: 0.5;
+}
+
+
