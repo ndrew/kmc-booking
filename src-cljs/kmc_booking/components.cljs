@@ -342,16 +342,15 @@ or a formatting string like \"dd MMMM yyyy\""
   			(pr-str actual-seats) "\n"
 
   			"history: " "pending=" (pending? history-seats) "; paid=" (paid? history-seats) "\n"
-  			(pr-str history-seats)
-
+  			(pr-str history-seats) "\n"
   			) 
-  		;(pr-str seats)
 
   		]
   	[:span
   		[:span.date (format-date-generic :SHORT_DATETIME date)]
   		[:span.name name]
-  		[:span.phone phone] 
+  		[:span.phone phone]
+  		[:span.tickets (pr-str (reduce #(conj %1 (:id %2)) [] actual-seats))] 
   	] 
 	  	
 	(if is-pending?

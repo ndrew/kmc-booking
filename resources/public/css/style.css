@@ -587,13 +587,13 @@ button.disabled {
   background-color: rgba(128,129,129,0.1);  
 }
 
-.booking-line .date, .booking-line .name, .booking-line .phone {
+.booking-line .date, .booking-line .name, .booking-line .phone, .booking-line .tickets {
   margin-right: 1rem;
 }
 
-.booking-line > span {
+.booking-line > span:first-child {
   display: inline-block;
-  width: 400px;
+  width: 600px;
 }
 
 .booking-line pre {
