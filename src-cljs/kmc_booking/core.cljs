@@ -61,15 +61,17 @@
 	;(println "Initial state")
 	;(.log js/console (pr-str @app-state))
 
-	(let [seat-comp   (rum/mount (c/seat-plan app-state)    (el "scheme"))
-		  header-comp (rum/mount (c/header app-state)       (el "header"))
-		  nfo-comp    (rum/mount (c/booking-info app-state) (el "nfo"))]
+	(let [;nfo-comp    (rum/mount (c/booking-info app-state) (el "nfo"))
+		  seat-comp   (rum/mount (c/seat-plan app-state)    (el "scheme"))
+		  header-comp (rum/mount (c/header)                 (el "header"))
+		  form-comp   (rum/mount (c/form app-state) 		(el "form"))]
 
 		(add-watch app-state :rendering 
 			(fn [_ _ _ _] 
-				(rum/request-render nfo-comp)
+				;(rum/request-render nfo-comp)
 				(rum/request-render seat-comp)
-				(rum/request-render header-comp))))
+				(rum/request-render header-comp)
+				(rum/request-render form-comp))))
 
 	(when-not (seq (@app-state :seats))
 		(load-data))

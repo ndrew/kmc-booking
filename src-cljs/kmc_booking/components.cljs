@@ -152,7 +152,7 @@
 ;
 ; header 
 
-(rum/defc header < rum/cursored rum/cursored-watch [app-state]
+(rum/defc header < rum/static []
 	[:div 
 		[:div#kmc-logo "КМЦ"]
 		[:div#legend
@@ -164,4 +164,12 @@
 		[:div#legend-prices "Ціна — 85 грн, за бокові місця — 70 грн."]
 	])
 
+;;;;;;
+; 
+; form
+
+(rum/defc form < rum/cursored rum/cursored-watch [app-state] 
+	(let [seats (rum/cursor app-state [:seats])]
+		[:div "yo!"]
+		))
 
