@@ -353,14 +353,28 @@ or a formatting string like \"dd MMMM yyyy\""
   		[:span.tickets (pr-str (reduce #(conj %1 (:id %2)) [] actual-seats))] 
   	] 
 	  	
-	(if is-pending?
-		[:span "очікують підтвердження"]
-		)
-
-  	#_(if is-pending?
+	
+  	(if is-pending?
   		[:button {:onClick (fn[e] 
-  								(.log js/console "Foo"))}
-  		 "викуплено!"])
+  			(let [url (str "/api/confirm" 
+									"?booking_id=" (js/encodeURIComponent id))]
+
+  					(if (.confirm js/window "Підтвердити?")
+  						(ajax url (fn[res]
+								(if (map? res)
+									(do
+										(println (get res :error "Сталась помилка!"))
+										;(reset! error (get res :error "Сталась помилка!")))
+										)
+									(do
+										((get @app-state :reload-fn))
+										;;(println res)
+										;; call refresh
+									))) "POST")
+  						)
+					)							
+
+  	)} "Підтвердити"])
 
   	(if is-pending? 
   		[:button {:onClick (fn[e] 
@@ -381,7 +395,7 @@ or a formatting string like \"dd MMMM yyyy\""
 									))) "POST")
   						)
 					)
-  		)} "скасувати"])
+  		)} "Cкасувати"])
 
   	(if is-paid? 
   		[:span "ВИКУПЛЕНО"]

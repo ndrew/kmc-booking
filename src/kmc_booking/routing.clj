@@ -132,7 +132,9 @@
     (do 
       ;(db/get-bookings)
       (let [{{id :booking_id} :params} req]
-          ;(db/cancel-booking id)
+          (db/confirm-booking id)
+          (core/init-seats! (db/get-seats))
+
           id
         )
       )

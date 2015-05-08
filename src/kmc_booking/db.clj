@@ -135,6 +135,16 @@
 		))
 
 
+(defn confirm-booking [booking-id]
+	(println (str "confirming " booking-id))
+	(sql/with-db-connection [c CONN] 
+		(sql/update! c "history" {:status "paid" } ["booking_id = ?" booking-id ])
+		(sql/update! c "seats" {:status "paid" :booking_id booking-id} ["booking_id = ?" booking-id])
+
+		))
+
+
+
 
 ;; TODO: trasaction
 ;; TODO: Check seats availability
