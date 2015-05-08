@@ -42,20 +42,26 @@
 
 
 (defn booking [req]
+  ;; 
+  (core/init-seats! (db/get-seats))
+  
   (let [{{name :name
           phone :phone
           seats :seats} :params} req
           seats (clojure.string/split seats #";")]
       
-
         (try
           (do 
             (doseq [id seats]
+                (println (pr-str (get @core/seats id)))
+
                 (when-not (get @core/seats id)
-                    (throw (Exception. (str "no such seat - " id))))
+                    (throw (Exception. (str "Немає місця " id))))
+
+                (println (pr-str (get-in @core/seats [id :status])))
 
                 (when-not (= "free" (get-in @core/seats [id :status]))
-                    (throw (Exception. (str "seat " id " is in " (get-in @core/seats [id :status]))))))
+                    (throw (Exception. (str "Хтось замовив місце " id " швидше!")))))
 
             (let [booking-id (db/create-booking name phone seats)]
               (doseq [id seats]

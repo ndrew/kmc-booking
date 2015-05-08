@@ -270,22 +270,26 @@
 						 						(reset! error (get res :error "Сталась помилка!")))
 						 					(do
 						 						(reset! success true)
-						 						((get @app-state :reload-fn))
+						 						
 						 						)
-						 					) 
+						 					)
+						 				((get @app-state :reload-fn)) 
 									) "POST")
 						 		)
 						 	)
 						}
 						"Придбати"]
 
-					(if-not (can-select-more? booked) [:div.info-message (str "Ми продаємо не більше " MAX_SEATS " квитків в одні руки! Звиняйте")])
-					(if @error  [:div.error-message @error])]
+					(if-not (can-select-more? booked) 
+						[:div.info-message (str "Ми продаємо не більше " MAX_SEATS " квитків в одні руки! Звиняйте")])]
 
 				
 			)
 			; else
-			(if @success  [:div.info-message "Квиточки заброньовані, з вами зв'яжуться"])
+			(if @success  [:div.info-message "Квиточки заброньовані, з вами зв'яжуться"]
+				(if @error [:div.error-message @error])
+
+				)
 		)
 
 
