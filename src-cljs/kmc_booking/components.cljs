@@ -291,9 +291,21 @@
 
 				)
 		)
+))
 
 
-		))
+(rum/defc admin-panel < rum/cursored rum/cursored-watch [app-state] 
+	(let [error (rum/cursor app-state [:error])
+		  bookings (rum/cursor app-state [:bookings])] 
+
+		[:div
+			(if @error [:div.error-message @error])
+			
+			(if @bookings [:pre (pr-str @bookings)])
+			]
+		)
+	)
+
 
 
 

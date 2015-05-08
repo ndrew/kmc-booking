@@ -99,8 +99,17 @@
   (GET "/admin" req 
     (friend/authenticated 
       (admin)))
-
 )
+
+(defn admin-bookings[]
+  (if (friend/current-authentication)
+    (do 
+      {:yo :bitch}
+      )
+    {:error "Forbidden"}
+    )
+)
+
 
 (defroutes api 
   (wrap-transit-response 
@@ -108,7 +117,12 @@
           (GET "/seats" [] {:body (seats)
                             :transit true})
           (POST "/book" req {:body (booking req)
-                             :transit true}))
+                             :transit true})
+
+          (GET "/bookings" [] {:body (admin-bookings)
+                               :transit true})
+          
+          )
 
     )
   )

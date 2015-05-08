@@ -575,3 +575,10 @@ button.disabled {
 }
 
 
+#admin {
+  background-color: rgba(128,129,129,0.1);
+  padding: 1rem;
+
+  margin: 1rem;
+
+} 
