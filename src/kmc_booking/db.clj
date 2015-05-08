@@ -114,11 +114,9 @@
 			(reduce (fn[a booking]
 						(conj a [booking 
 
-							;(sql/query c
-                  		;		["select * from history where booking_id = ?" (:id booking)])
-							(sql/query c
-                  				["select * from seats where booking_id = ?" (:id booking)])
-
+							[(sql/query c ["select * from seats where booking_id = ?" (:id booking)])
+							 (sql/query c ["select * from history where booking_id = ?" (:id booking)])]
+							
 
 
 							])

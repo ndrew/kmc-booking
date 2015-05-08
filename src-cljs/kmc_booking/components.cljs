@@ -320,27 +320,48 @@ or a formatting string like \"dd MMMM yyyy\""
 ))
 
 
-(rum/defc admin-booking [booking seats]
+(rum/defc admin-booking [booking [actual-seats history-seats]]
   (let [{id :id
   		 name :name
   		 phone :phone
   		 date :date
-  		 } booking]
+  		 } booking
+  		 pending? (partial every? 
+  		 	 (fn [a]
+  		 	 	(= "pending" (:status a))))
+		 paid? (partial every? #(= "paid" (:status %)))
+
+
+  		 ]
 
   [:div.booking-line
-  	[:pre (pr-str seats)]
+  	[:pre
+  		(str 
+  			"actual:  " "pending=" (pending? actual-seats) "; paid=" (paid? actual-seats)  "\n"
+  			"history: " "pending=" (pending? history-seats) "; paid=" (paid? history-seats)
+  			) 
+  		;(pr-str seats)
+
+  		]
   	[:span
   		[:span.date (format-date-generic :SHORT_DATETIME date)]
   		[:span.name name]
   		[:span.phone phone] 
   	] 
   	
-  	[:button {:onClick (fn[e] 
-  		(.log js/console "Foo")
-  		)} "підтвердити"]
-  	[:button {:onClick (fn[e] 
-  		(.log js/console "Bar")
-  		)} "скасувати"]
+  	#_(if pending?
+  		[:button {:onClick (fn[e] 
+  								(.log js/console "Foo"))}
+  		 "викуплено!"])
+
+  	#_(if pending? 
+  		[:button {:onClick (fn[e] 
+  								(.log js/console "Bar")
+  		)} "скасувати"])
+
+  	#_(if paid? 
+  		[:span "ВИКУПЛЕНО"]
+  		)
 
   	]
  ))
