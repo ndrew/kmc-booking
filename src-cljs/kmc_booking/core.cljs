@@ -33,7 +33,8 @@
 
 (defonce app-state (atom { 
 	:seats {}
-	:selected #{}
+	:name ""
+	:phone ""
 	;:seats-plan [[]]
 }))
 
@@ -56,11 +57,7 @@
 ; entry point
 ;
 
-(defn ^:export start[]
-	(enable-console-print!)
-	;(println "Initial state")
-	;(.log js/console (pr-str @app-state))
-
+(defn booking-app[]
 	(let [;nfo-comp    (rum/mount (c/booking-info app-state) (el "nfo"))
 		  seat-comp   (rum/mount (c/seat-plan app-state)    (el "scheme"))
 		  header-comp (rum/mount (c/header)                 (el "header"))
@@ -75,6 +72,21 @@
 
 	(when-not (seq (@app-state :seats))
 		(load-data))
+	)
+
+(defn admin-app[]
+	(println "Hello!")
+	)
+
+(defn ^:export start[]
+	(enable-console-print!)
+
+	(let [u (.. js/window -location -pathname)]
+		(if (= "/admin" u)
+			(admin-app)
+			(booking-app)
+			)
+		)
 )
 
 (set! (.-onload js/window) start)
