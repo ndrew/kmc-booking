@@ -24,6 +24,7 @@
 
 (defroutes routes
   rounting/routes
+  rounting/api
   (route/resources "/")
 ); (route/not-found (layout/four-oh-four))
 

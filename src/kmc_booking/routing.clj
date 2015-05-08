@@ -28,15 +28,26 @@
 
 (defn wrap-transit-response [handler]
   (fn [request]
-    (-> (handler request)
-       (update-in [:headers] assoc "Content-Type" "application/transit+json; charset=utf-8")
-       (update-in [:body] #(io/input-stream (write-transit-bytes %))))))
+    (let [response (handler request)] 
+       (if (get response :transit)
+         (update-in 
+          (update-in response [:headers] assoc "Content-Type" "application/transit+json; charset=utf-8")
+          [:body] #(io/input-stream (write-transit-bytes %)))
+         response
+         )
+
+       )))
 
 
 
 (defn booking [req]
-  (let [{params :params} req]
-      params
+  (let [{params :params} req
+         {name :name
+          phone :phone
+          seats :seats} params]
+      
+      (str "name=" name "; phone=" phone )
+      ;params
     )
 )
 
@@ -68,10 +79,15 @@
     (friend/authenticated 
       (admin)))
 
-  (wrap-transit-response 
-    (compojure.core/context "/api" []
-          (GET "/seats" [] {:body (seats)})
-          (POST "/book" req {:body (booking req)})))
-
 )
 
+(defroutes api 
+  (wrap-transit-response 
+    (compojure.core/context "/api" []
+          (GET "/seats" [] {:body (seats)
+                            :transit true})
+          (POST "/book" req {:body (booking req)
+                             :transit true}))
+
+    )
+  )
