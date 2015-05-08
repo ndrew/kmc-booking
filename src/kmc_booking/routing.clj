@@ -118,6 +118,21 @@
       ;(db/get-bookings)
       (let [{{id :booking_id} :params} req]
           (db/cancel-booking id)
+          (core/init-seats! (db/get-seats))
+          id
+        )
+      )
+    {:error "Forbidden"}
+    )
+)
+
+
+(defn admin-confirm[req]
+  (if (friend/current-authentication)
+    (do 
+      ;(db/get-bookings)
+      (let [{{id :booking_id} :params} req]
+          ;(db/cancel-booking id)
           id
         )
       )
@@ -140,6 +155,8 @@
           (POST "/discard" req {:body (admin-discard req)
                                 :transit true})
           
+          (POST "/confirm" req {:body (admin-confirm req)
+                                :transit true})
 
           )
 
