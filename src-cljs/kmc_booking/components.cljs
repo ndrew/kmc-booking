@@ -159,9 +159,9 @@
 			[:div [:div.seat.free] "наявні" ]
 			[:div [:div.seat.paid] "викуплені"]
 			[:div [:div.seat.pending] "заброньовані" ]
-			[:div [:div.seat.your] "вибрані" ]
+			[:div [:div.seat.your] "вибрані" ]]
 
-			]
+		[:div#legend-prices "Ціна — 85 грн, за бокові місця — 70 грн."]
 	])
 
 

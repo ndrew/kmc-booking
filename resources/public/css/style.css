@@ -474,7 +474,7 @@ button {
   background-color: #d1f5f4;
 
   height: 60px;
-  min-width: 500px;
+  min-width: 1000px;
 }
 
 #kmc-logo {
@@ -489,7 +489,7 @@ button {
 
 #legend {
   display: inline-block;
-  margin-left: 3rem;
+  margin-left: 5rem;
 
   height: 30px;
 }
@@ -515,5 +515,11 @@ button {
   height: 15px;
   width: 15px;
   border: 2px solid rgba(255,255,255,0.5);
+}
 
+#legend-prices {
+  display: inline-block;
+  margin-left: 5rem;
+
+  font-weight: bolder;
 }
