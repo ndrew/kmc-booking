@@ -320,7 +320,7 @@ or a formatting string like \"dd MMMM yyyy\""
 ))
 
 
-(rum/defc admin-booking [booking]
+(rum/defc admin-booking [booking seats]
   (let [{id :id
   		 name :name
   		 phone :phone
@@ -328,15 +328,19 @@ or a formatting string like \"dd MMMM yyyy\""
   		 } booking]
 
   [:div.booking-line
-  	;[:pre (pr-str booking)]
+  	[:pre (pr-str seats)]
   	[:span
   		[:span.date (format-date-generic :SHORT_DATETIME date)]
   		[:span.name name]
   		[:span.phone phone] 
   	] 
   	
-  	[:button "підтвердити"]
-  	[:button "скасувати"]
+  	[:button {:onClick (fn[e] 
+  		(.log js/console "Foo")
+  		)} "підтвердити"]
+  	[:button {:onClick (fn[e] 
+  		(.log js/console "Bar")
+  		)} "скасувати"]
 
   	]
  ))
@@ -351,7 +355,8 @@ or a formatting string like \"dd MMMM yyyy\""
 
 			(if @bookings 
 				(into [:div] 
-					(map #(rum/with-props admin-booking % :rum/key (:id %))
+					(map (fn[[booking seats]]
+							(rum/with-props admin-booking booking seats :rum/key (:id booking)))
 					@bookings))
 
 				)

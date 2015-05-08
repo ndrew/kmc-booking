@@ -108,8 +108,23 @@
 
 (defn get-bookings []
 	(sql/with-db-connection [c CONN] 
-		(sql/query c
-                  ["select * from bookings order by date desc"])))
+		
+		(let [data (sql/query c
+                  ["select * from bookings order by date desc"])]
+			(reduce (fn[a booking]
+						(conj a [booking 
+
+							;(sql/query c
+                  		;		["select * from history where booking_id = ?" (:id booking)])
+							(sql/query c
+                  				["select * from seats where booking_id = ?" (:id booking)])
+
+
+
+							])
+					) 
+				[]
+				data))))
 
 
 
