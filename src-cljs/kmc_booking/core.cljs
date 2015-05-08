@@ -20,7 +20,8 @@
 	:name ""
 	:phone ""
 	;:seats-plan [[]]
-	:sucess false
+	:success false
+	:error nil
 }))
 
 

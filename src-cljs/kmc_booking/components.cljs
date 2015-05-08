@@ -24,7 +24,7 @@
    		(fn [[k {s :status}]]
      				(= status s)) @seats))
 
-(def MAX_SEATS 7)
+(def MAX_SEATS 10)
 
 (defn- can-select-more? [seats]
 	(> MAX_SEATS (count seats)))
@@ -132,7 +132,17 @@
 						 	(let [el (.-target e)
 								  id (seat-id (attr el "y") (attr el "x"))]
 						 		(when-not (= "-" id)
-									(swap! seats assoc-in [id :status] (new-status seats id)))))}
+									(let [st (new-status seats id)]
+										(swap! seats assoc-in [id :status] st)
+										(when (= st "pending")
+											(swap! app-state assoc :success false)
+											(swap! app-state assoc :error nil)
+											
+											)
+
+										)
+
+									)))}
 
 			[:div#parter {:key "parter"} 
 				(rum/with-props seat-rows parter-rows "left" :rum/key (str "left_" (range-key parter-rows)))
@@ -169,7 +179,7 @@
 			[:div [:div.seat.pending] "заброньовані" ]
 			[:div [:div.seat.your] "вибрані" ]]
 
-		[:div#legend-prices "Ціна — 85 грн, за бокові місця — 70 грн."]
+		[:div#legend-prices "Ціна — 80 грн, за бокові місця — 70 грн."]
 	])
 
 ;;;;;;
@@ -191,10 +201,10 @@
 (defn ticket-n[n]
 	(condp = n
 		1 " квиток"
-		5 " квитків"
-		6 " квитків"
-		7 " квитків"
-		" квитки"
+		2 " квитки"
+		3 " квитки"
+		4 " квитки"
+		" квитків"
 		)
 	)
 
@@ -206,7 +216,7 @@
 			(if (or (< col 4)
 					(> col 36))
 				70
-				85
+				80
 			)
 		)
 	)
@@ -222,6 +232,8 @@
 		  name (rum/cursor app-state [:name])
 		  phone (rum/cursor app-state [:phone])
 		  
+		  error (rum/cursor app-state [:error])
+		  success (rum/cursor app-state [:success])
 		  ]
 		(if (seq booked)
 			(let [validate-name #(not (string/blank? %))
@@ -238,11 +250,10 @@
 									"&phone=" (js/encodeURIComponent @phone)
 									"&seats=" (js/encodeURIComponent ids-to-book))
 				  ]
-				(if (can-select-more? booked)
 					[:div 
 						[:span.price (str n (ticket-n n) ", " (calc-price booked) " грн ")]
 
-						(input "Ім'я" name validate-name)
+						(input "Прізвище й ім'я" name validate-name)
 						(input "Телефон" phone validate-phone)
 
 					[:button#book 
@@ -252,22 +263,31 @@
 						 :onClick (fn[e]
 						 	(when valid? 
 						 		(ajax url 
-						 			(fn[d] 
-						 				;(.warn js/console (pr-str d))
-						 				((get @app-state :reload-fn))
-						 				) "POST")
+						 			(fn[res]
 
-
+						 				(if (map? res)
+						 					(do
+						 						(reset! error (get res :error "Сталась помилка!")))
+						 					(do
+						 						(reset! success true)
+						 						((get @app-state :reload-fn))
+						 						)
+						 					) 
+									) "POST")
 						 		)
 						 	)
 						}
 						"Придбати"]
-					]
-				[:div.message (str "Продаємо не більше " MAX_SEATS " квитків в одні руки!")]
-				)
+
+					(if-not (and 
+								(can-select-more? booked)
+							(not (or @error @success))) [:div.info-message (str "Ми продаємо не більше " MAX_SEATS " квитків в одні руки! Звиняйте")])
+					(if @error  [:div.error-message @error])]
+
+				
 			)
 			; else
-			;[:div.info "Виберіть квитки"]
+			(if @success  [:div.info-message "Квиточки заброньовані, з вами зв'яжуться"])
 		)
 
 
