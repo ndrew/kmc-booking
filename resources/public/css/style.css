@@ -591,11 +591,6 @@ button.disabled {
   margin-right: 1rem;
 }
 
-.booking-line > span:first-child {
-  display: inline-block;
-  width: 600px;
-}
-
 .booking-line pre {
   display: none;
 }
@@ -604,6 +599,10 @@ button.disabled {
   margin-left: 1rem;
 }
 
+.booking-line > span {
+  width: 700px !important;
+  display: inline-block;
+}
 
 
 .book-now {
