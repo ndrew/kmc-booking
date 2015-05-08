@@ -230,9 +230,16 @@
 				  valid? (and (validate-name @name)
 							 (validate-phone @phone))
 				  n (count booked)
+				  ids-to-book (reduce (fn [s [id _]]
+          							(str s (if (seq s) ";") id )	
+          						) "" booked)
+				  url (str "/api/book" 
+									"?name=" (js/encodeURIComponent @name)
+									"&phone=" (js/encodeURIComponent @phone)
+									"&seats=" (js/encodeURIComponent ids-to-book))
 				  ]
 				(if (can-select-more? booked)
-					[:div ;(pr-str booked)
+					[:div 
 						[:span.price (str n (ticket-n n) ", " (calc-price booked) " грн ")]
 
 						(input "Ім'я" name validate-name)
@@ -244,7 +251,7 @@
 									"")
 						 :onClick (fn[e]
 						 	(when valid? 
-						 		(ajax "/api/book?foo=bar" 
+						 		(ajax url 
 						 			nil "POST")
 
 
