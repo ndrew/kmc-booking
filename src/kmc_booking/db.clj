@@ -182,27 +182,20 @@
 
 
 (defn init-db[] 
-	(when-not (migrated? "testing")
-		(create-testing-table!))
+	(try
 
-	(when-not (migrated? "seats")
-		(create-seats-table!))
 
-	(when-not (migrated? "bookings")
-		(create-bookings-table!))
-
-	(when-not (migrated? "history")
-		(create-history-table!))
+		(when-not (migrated? "testing") (create-testing-table!))
+		(when-not (migrated? "seats") (create-seats-table!))
+		(when-not (migrated? "bookings") (create-bookings-table!))
+		(when-not (migrated? "history") (create-history-table!))
 	
-	;(try
-	;	...
-	;	(catch Exception e 
-	;		(do 
-	;			(print (.getNextException e)))))
+		(migrate-live! "1_reinit_seats" migrate__reinit_seats!)
+		(migrate-live! "2_seats_for_judges"  migrate__seats_for_judges!)
 
-	(migrate-live! "1_reinit_seats" migrate__reinit_seats!)
-
-	(migrate-live! "2_seats_for_judges"  migrate__seats_for_judges!)
+	(catch Exception e 
+		(do 
+			(print (.getNextException e)))))
 
 )
 
