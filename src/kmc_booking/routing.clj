@@ -34,37 +34,10 @@
 
 
 
-(defn booking []
-  ;; also keep-alive
-	
-  #_(pr-str (db/migrated? db/testing-table))
-
-
-  #_(do 
-    (when (db/migrated? db/seats-table) (db/drop-table! db/seats-table))
-    (when (db/migrated? db/bookings-table) (db/drop-table! db/bookings-table))
-    
-    (pr-str (db/create-seats-table))
-    (pr-str (db/create-bookings-table))  
-  )
-
-  #_(pr-str (db/get-seats))
-  #_(pr-str (str "Booking created: " (db/create-booking "Test User" "093777764" [])))
-
-
-
-  #_(str 
-    (pr-str @core/seats)
-    "<hr>"
-    (pr-str (db/get-test-data))
-    )
-
-  #_(pr-str (db/migrate-live! "test"
-      (fn []
-        "test")))
-
-  ""
-
+(defn booking [req]
+  ;(println req)
+  ; 
+  "!!!!"
 )
 
 
@@ -86,7 +59,8 @@
 (defroutes routes
   (GET "/" [] (ring/redirect "landing/index.html"))
   ;(GET  "/" [] (index))
-  (GET "/booking" [] (booking))
+  
+  (POST "/booking" req (booking req))
 
   (friend/logout (ANY "/logout" request 
                               (ring/redirect "/")))

@@ -1,6 +1,7 @@
 (ns ^:figwheel-always kmc-booking.core 
   (:require [kmc-booking.components :as c]
   			[rum :as rum]
+  			[kmc-booking.util :refer [el ajax-transit]]
   			[cognitect.transit :as transit])
     (:import
     	goog.net.XhrIo))
@@ -8,23 +9,6 @@
 ;;;;;
 ;
 ; utils
-
-(defn el [id] (js/document.getElementById id))
-
-(defn read-transit [s]
-  (transit/read (transit/reader :json {:handlers {"datascript/Datom" (fn[a] 
-  	(println "read transit")
-  	)}}) s))
-
-(defn- ajax [url callback & [method]]
-  (.send goog.net.XhrIo url
-    (fn [reply]
-      (let [res (.getResponseText (.-target reply))
-            res (read-transit res);(profile (str "read-transit " url " (" (count res) " bytes)") (read-transit res))
-            ]
-        (when callback
-          (js/setTimeout #(callback res) 0))))
-    (or method "GET")))
 
 
 ;;;;;;
@@ -36,6 +20,7 @@
 	:name ""
 	:phone ""
 	;:seats-plan [[]]
+	:sucess false
 }))
 
 
@@ -45,7 +30,7 @@
 ; api
 
 (defn load-data[]
-	(ajax "/api/seats" (fn [seats]
+	(ajax-transit "/api/seats" (fn [seats]
 		(swap! app-state assoc :seats seats)) "GET"))
 
 (defn book[]

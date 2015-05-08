@@ -1,7 +1,9 @@
 (ns ^:figwheel-always kmc-booking.components
   (:require [sablono.core :as sab]
   			[rum :as rum]
-  			[clojure.string :as string]))
+  			[clojure.string :as string]
+  			[kmc-booking.util :refer [ajax-post]]
+  			))
 
 ;;;;;
 ;
@@ -242,7 +244,12 @@
 									"")
 						 :onClick (fn[e]
 						 	(when valid? 
-						 		(println "YO!")
+						 		(ajax-post "/booking" (fn []
+						 			(js/alert "In progress!")
+
+						 			;(println "yo")
+						 			))
+
 
 						 		)
 						 	)
