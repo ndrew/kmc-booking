@@ -11,8 +11,18 @@ iteration 1:
     1. present all the bookings
     2. confirm selected booking
     3. delete selected booking
+4. updates via web-socket
 
-  4. updates via web-socket
+5. адмінство 
+  забронювати
+  1) 3 ряд, 4-19
+  2) 1 ряд, 1-3, 37-39
+  3) 2 ряд, 1-3, 37-39
+  4) 11 ряд, 20-25
+  
+в 3-му ряді буде сидіти журі і там не можна купувати квитки?
+
+ціна квитків має бути 85 грн, а за бокові місця - 70 грн
 
 iteration 2:
 

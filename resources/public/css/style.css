@@ -281,6 +281,14 @@ button {
 /* statuses */
 
 .pending {
+  background-color: gray;
+}
+
+.paid {
+  background-color: rgba(255,254,254,0.1);
+}
+
+.your {
   background-color: #40d7d2;
 }
 
@@ -291,7 +299,7 @@ button {
 
 #scheme {
 	margin-left: 40px;
-  	margin-top: 70px;
+  margin-top: 70px;
 }
 
 
@@ -462,8 +470,14 @@ button {
 }
 
 
+#header {
+  background-color: #d1f5f4;
+
+  height: 60px;
+  min-width: 500px;
+}
+
 #kmc-logo {
-  background-color: rgba(128,129,128,0.1);
   display: inline-block;
 
   padding: .7rem .5rem .5rem .5rem;
@@ -471,4 +485,35 @@ button {
   font: normal 900 1.5rem Helvetica, Arial;
   border: .2rem solid black;
   margin: .25rem;
+}
+
+#legend {
+  display: inline-block;
+  margin-left: 3rem;
+
+  height: 30px;
+}
+
+#legend span {
+  line-height: 100%;
+  display: inline-block;
+  margin-right: .5rem;
+}
+
+
+#legend div {
+  display: inline-block;
+}
+
+#legend .seat {
+  position: relative;
+  top: 6px;
+  left: 0;
+  margin-right: 5px;
+  margin-left: 10px;
+
+  height: 15px;
+  width: 15px;
+  border: 2px solid rgba(255,255,255,0.5);
+
 }

@@ -24,8 +24,11 @@
 (defn new-status [seats id]
 	(let [status (get-in @seats [id :status])]
 		(condp = status
-			"free" "pending"
-			"pending" "free")))
+			"free" "your"
+			"your" "free"
+  			"paid" "paid"
+  			"pending" "pending"
+			)))
 
 ;;;;;
 ;
@@ -150,6 +153,15 @@
 ; header 
 
 (rum/defc header < rum/cursored rum/cursored-watch [app-state]
-	[:div#kmc-logo "КМЦ"])
+	[:div 
+		[:div#kmc-logo "КМЦ"]
+		[:div#legend
+			[:div [:div.seat.free] "наявні" ]
+			[:div [:div.seat.paid] "викуплені"]
+			[:div [:div.seat.pending] "заброньовані" ]
+			[:div [:div.seat.your] "вибрані" ]
+
+			]
+	])
 
 
