@@ -18,7 +18,7 @@
                  [rum "0.2.6"]
 
                  [com.cemerick/friend "0.2.1"]
-                 
+
                  [com.cognitect/transit-clj "0.8.271"]
                  [com.cognitect/transit-cljs "0.8.207"]
 
@@ -43,7 +43,7 @@
   :uberjar-name "kmc-booking-standalone.jar"
 
   :hooks [leiningen.cljsbuild]
-  :cljsbuild { 
+  :cljsbuild {
     :builds [
       { :id "prod"
         :source-paths ["src-cljs"]
@@ -58,7 +58,7 @@
 
       { :id "dev"
             :source-paths ["src-cljs"]
-            :figwheel { 
+            :figwheel {
               :on-jsload "kmc-booking.core/start"
                }
             :compiler {
@@ -71,7 +71,7 @@
             }}
   ]}
 
- 
+
   :profiles {
     :uberjar {:aot :all}
 
@@ -79,7 +79,7 @@
 
 
   :figwheel {
-             :http-server-root "public" ;; default and assumes "resources" 
+             :http-server-root "public" ;; default and assumes "resources"
              :server-port 3449 ;; default
              :css-dirs ["resources/public/css"] ;; watch and update CSS
              :ring-handler kmc-booking.web/application
