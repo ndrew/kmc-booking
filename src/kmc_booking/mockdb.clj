@@ -1,20 +1,8 @@
-(ns kmc-booking.db
-	(:require [clojure.java.jdbc :as sql]))
+(ns kmc-booking.mockdb)
 
 
-(defn gen-id [] (str (java.util.UUID/randomUUID)))
-
-(def CONN
-	(or (System/getenv "DATABASE_URL")
-		"postgresql://postgres:postgres@localhost:5432/misskma"))
-
-
-(def seat-schema  ;; [[row-start col-start] [row-end col-end]]
-	[[[1 1] [12 40]]
-     [[12 4] [14 37]]
-     [[14 1] [21 32]]
-     [[21 1] [22 26]]])
-
+(defonce seats-table (atom []))
+(defonce bookings-table (atom []))
 
 ;; as described in seat-scema
 (defn gen-seats-data [blocks]
@@ -25,6 +13,38 @@
                        :status "free"
                   		}))
             ) [] blocks))
+
+
+(defn init-db[config]
+  ;; ;; [[row-start col-start] [row-end col-end]]
+  (reset! seats-table (gen-seats-data (:seats-plan config)))
+)
+
+(defn get-seats []
+	@seats-table
+  )
+
+
+(defn get-bookings []
+	[])
+
+
+(defn create-booking [name phone seats]
+  :booking-id
+  )
+
+(defn cancel-booking [booking-id]
+  )
+
+(defn confirm-booking [booking-id]
+  )
+
+
+(comment
+
+
+
+
 
 ;;;;;;;;;
 ;; DDL
@@ -100,26 +120,6 @@
                   ["select * from testing"])))
 
 
-(defn get-seats []
-	(sql/with-db-connection [c CONN]
-		(sql/query c
-                  ["select * from seats"])))
-
-
-(defn get-bookings []
-	(sql/with-db-connection [c CONN]
-
-		(let [data (sql/query c
-                  ["select * from bookings order by date desc"])]
-			(reduce (fn[a booking]
-						(conj a [booking
-
-							[(sql/query c ["select * from seats where booking_id = ?" (:id booking)])
-							 (sql/query c ["select * from history where booking_id = ?" (:id booking)])]
-							])
-					)
-				[]
-				data))))
 
 
 (defn cancel-booking [booking-id]
@@ -192,38 +192,4 @@
           (for [rows (range 11 12) cols (range 20 26)] (str rows "-" cols)))))
 
 
-(defn migrate__mister! []
-  (drop-table! "bookings")
-	(create-bookings-table!)
-  (drop-table! "history")
-	(create-history-table!)
   )
-
-(defn init-db[config]
-	(try
-
-
-		(when-not (migrated? "testing") (create-testing-table!))
-		(when-not (migrated? "seats") (create-seats-table!))
-		(when-not (migrated? "bookings") (create-bookings-table!))
-		(when-not (migrated? "history") (create-history-table!))
-
-		(migrate-live! "1_reinit_seats" migrate__reinit_seats!)
-		(migrate-live! "2_seats_for_judges"  migrate__seats_for_judges!)
-    (migrate-live! "3_mister"  migrate__mister!)
-	(catch Exception e
-		(do
-			(print (.getNextException e)))))
-
-)
-
-
-
-
-
-
-
-
-
-
-

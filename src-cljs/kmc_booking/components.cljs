@@ -11,18 +11,34 @@
 ;
 ; helpers
 
-(defn seat-id [y x] 
+(defn seat-price [col row]
+  (cond
+    (and (or
+      (and (>= col 1) (<= col 3))
+      (and (>= col 37) (<= col 39))
+      )
+    (<= row 11))
+    40
+
+    (or
+      (and (>= row 1) (<= row 6))
+      (and (>= row 15) (<= row 18))
+      ) 60
+    :else 50)
+  )
+
+(defn seat-id [y x]
 	(str y "-" x))
 
 (defn- attr[el n]
 	(.getAttribute el n))
 
-(defn- range-key [r] 
+(defn- range-key [r]
     [(first r) (last r)])
 
 
 (defn seats-by-status [seats status ]
-	(filter 
+	(filter
    		(fn [[k {s :status}]]
      				(= status s)) @seats))
 
@@ -73,12 +89,12 @@ or a formatting string like \"dd MMMM yyyy\""
 (rum/defc booking-info [app-state] ;;  < rum/cursored
 	(let [seats (rum/cursor app-state [:seats])
 		  booked (seats-by-status seats "pending")]
-		[:div 
+		[:div
 			[:pre (pr-str booked)]
 		[:hr]
-		[:button 
-			{:onClick (fn[e] 
-				(swap! app-state assoc-in [:seats (.prompt js/window "use row-seat format like '1-39'" "1-39") :status] 
+		[:button
+			{:onClick (fn[e]
+				(swap! app-state assoc-in [:seats (.prompt js/window "use row-seat format like '1-39'" "1-39") :status]
 					"pending")
 				)} "piy!"]
 		]
@@ -90,25 +106,25 @@ or a formatting string like \"dd MMMM yyyy\""
 ; seating scheme components
 ;
 
-(rum/defc seat < rum/cursored [y x current] 
-	[:div {:x x :y y 
-		 	:class (str "seat " (get @current :status))
+(rum/defc seat < rum/cursored [y x current]
+	[:div {:x x :y y
+		 	:class (str "seat " (get @current :status) " price_" (seat-price x y))
 			} ""])
 
 
 (rum/defc seat-col < rum/static [col]
-	[:div.col_num 
+	[:div.col_num
 		[:div {:key col} col]])
 
 
 (rum/defc seat-cols < rum/static [range]
-	(into [:div] 
+	(into [:div]
 		(map #(rum/with-props seat-col % :rum/key %)
 			range)))
 
 
 (rum/defc seat-row < rum/static [row]
-	[:div.row_num 
+	[:div.row_num
 		[:div {:key row} row]
 		]
 	)
@@ -116,27 +132,27 @@ or a formatting string like \"dd MMMM yyyy\""
 (rum/defc seat-rows < rum/static [range class]
 	(into [:div.rows {:class class}]
 		 	[[:div.col_num {:key "spacer"} [:div {:__html "&nbsp;" :key 0}]]
-		 	(map 
+		 	(map
 		 		#(rum/with-props seat-row % :rum/key %)
 		 		range)]))
 
 
 
-(rum/defc seat-block < rum/cursored [root rows cols seats] ; < rum/cursored 
+(rum/defc seat-block < rum/cursored [root rows cols seats] ; < rum/cursored
 	(reduce conj root [
 		(if (= 1 (count rows))
 			nil
 			(rum/with-props seat-cols cols :rum/key :top)
 			)
-		
-		(map (fn [[y x]] 
-					(rum/with-props seat y x 
-						(rum/cursor seats [(seat-id y x)]) :rum/key [y x])) 
+
+		(map (fn [[y x]]
+					(rum/with-props seat y x
+						(rum/cursor seats [(seat-id y x)]) :rum/key [y x]))
 				 (for [y rows x cols] [y x]))
 
 		(rum/with-props seat-cols cols :rum/key :bottom)
 		])
-)		
+)
 
 
 (defonce parter-rows (range 1 14))
@@ -145,13 +161,13 @@ or a formatting string like \"dd MMMM yyyy\""
 (defonce left_side_cols (reverse (range 37 40)))
 (defonce right_side_cols (reverse (range 1 4)))
 (defonce left_house_cols (reverse (range 20 37)))
-(defonce right_house_cols (reverse (range 4 20))) 		
+(defonce right_house_cols (reverse (range 4 20)))
 (defonce beletage_cols (range 1 32))
 (defonce beletage_last_cols (range 1 26))
 (defonce beletage_last_rows (range 21 22))
 
 
-(rum/defc seat-plan < rum/cursored rum/cursored-watch [app-state] 
+(rum/defc seat-plan < rum/cursored rum/cursored-watch [app-state]
 	(let [seats (rum/cursor app-state [:seats])]
 		[:div.seat-plan {:key "root"
 						 :onClick (fn[e]
@@ -163,14 +179,14 @@ or a formatting string like \"dd MMMM yyyy\""
 										(when (= st "pending")
 											(swap! app-state assoc :success false)
 											(swap! app-state assoc :error nil)
-											
+
 											)
 
 										)
 
 									)))}
 
-			[:div#parter {:key "parter"} 
+			[:div#parter {:key "parter"}
 				(rum/with-props seat-rows parter-rows "left" :rum/key (str "left_" (range-key parter-rows)))
 				(rum/with-props seat-rows parter-rows "right" :rum/key (str "right_" (range-key parter-rows)))
 
@@ -194,26 +210,29 @@ or a formatting string like \"dd MMMM yyyy\""
 
 ;;;;;;
 ;
-; header 
+; header
 
 (rum/defc header < rum/static []
-	[:div 
+	[:div
 		[:div#kmc-logo "КМЦ"]
 		[:div#legend
-			[:div [:div.seat.free] "наявні" ]
+			[:div [:div.seat.free.price_40] "40 грн" ]
+			[:div [:div.seat.free.price_50] "50 грн" ]
+			[:div [:div.seat.free.price_60] "60 грн" ]
+
 			[:div [:div.seat.paid] "викуплені"]
 			[:div [:div.seat.pending] "заброньовані" ]
 			[:div [:div.seat.your] "вибрані" ]]
 
-		[:div#legend-prices "Ціна — 80 грн, за бокові місця — 70 грн."]
+		[:div#legend-prices ""]
 	])
 
 ;;;;;;
-; 
+;
 ; form
 
 (rum/defc input < rum/reactive [label ref fn]
-  [:div.input 
+  [:div.input
 	  [:label label]
 	  [:input {:type "text"
            :value (rum/react ref)
@@ -234,16 +253,13 @@ or a formatting string like \"dd MMMM yyyy\""
 		)
 	)
 
+;; TODO
 (defn price-by-id [id]
 	(let [[r c] (string/split id #"-")
 			row (js/parseInt r)
 			col (js/parseInt c)
 		]
-			(if (or (< col 4)
-					(> col 36))
-				70
-				80
-			)
+      (seat-price col row)
 		)
 	)
 
@@ -252,12 +268,12 @@ or a formatting string like \"dd MMMM yyyy\""
 		(+ (price-by-id id) p)
 			) 0 booked))
 
-(rum/defc form < rum/cursored rum/cursored-watch [app-state] 
+(rum/defc form < rum/cursored rum/cursored-watch [app-state]
 	(let [seats (rum/cursor app-state [:seats])
 		  booked (seats-by-status seats "your")
 		  name (rum/cursor app-state [:name])
 		  phone (rum/cursor app-state [:phone])
-		  
+
 		  error (rum/cursor app-state [:error])
 		  success (rum/cursor app-state [:success])
 		  ]
@@ -269,26 +285,26 @@ or a formatting string like \"dd MMMM yyyy\""
 							 (validate-phone @phone))
 				  n (count booked)
 				  ids-to-book (reduce (fn [s [id _]]
-          							(str s (if (seq s) ";") id )	
+          							(str s (if (seq s) ";") id )
           						) "" booked)
-				  url (str "/api/book" 
+				  url (str "/api/book"
 									"?name=" (js/encodeURIComponent @name)
 									"&phone=" (js/encodeURIComponent @phone)
 									"&seats=" (js/encodeURIComponent ids-to-book))
 				  ]
-					[:div 
+					[:div
 						[:span.price (str n (ticket-n n) ", " (calc-price booked) " грн ")]
 
 						(input "Прізвище й ім'я" name validate-name)
 						(input "Телефон" phone validate-phone)
 
-					[:button#book 
-						{:class (if-not valid? 
+					[:button#book
+						{:class (if-not valid?
 									"disabled"
 									"")
 						 :onClick (fn[e]
-						 	(when valid? 
-						 		(ajax url 
+						 	(when valid?
+						 		(ajax url
 						 			(fn[res]
 
 						 				(if (map? res)
@@ -296,20 +312,20 @@ or a formatting string like \"dd MMMM yyyy\""
 						 						(reset! error (get res :error "Сталась помилка!")))
 						 					(do
 						 						(reset! success true)
-						 						
+
 						 						)
 						 					)
-						 				((get @app-state :reload-fn)) 
+						 				((get @app-state :reload-fn))
 									) "POST")
 						 		)
 						 	)
 						}
 						"Придбати"]
 
-					(if-not (can-select-more? booked) 
+					(if-not (can-select-more? booked)
 						[:div.info-message (str "Ми продаємо не більше " MAX_SEATS " квитків в одні руки! Звиняйте")])]
 
-				
+
 			)
 			; else
 			(if @success  [:div.info-message "Квиточки заброньовані, з вами зв'яжуться"]
@@ -326,7 +342,7 @@ or a formatting string like \"dd MMMM yyyy\""
   		 phone :phone
   		 date :date
   		 } booking
-  		 pending? (partial every? 
+  		 pending? (partial every?
   		 	 (fn [a]
   		 	 	(= "pending" (:status a))))
 		 paid? (partial every? #(= "paid" (:status %)))
@@ -337,26 +353,26 @@ or a formatting string like \"dd MMMM yyyy\""
 
   [:div.booking-line
   	[:pre
-  		(str 
+  		(str
   			"actual:  " "pending=" is-pending? "; paid=" is-paid?  "\n"
   			(pr-str actual-seats) "\n"
 
   			"history: " "pending=" (pending? history-seats) "; paid=" (paid? history-seats) "\n"
   			(pr-str history-seats) "\n"
-  			) 
+  			)
 
   		]
   	[:span
   		[:span.date (format-date-generic :SHORT_DATETIME date)]
   		[:span.name name]
   		[:span.phone phone]
-  		[:span.tickets (pr-str (reduce #(conj %1 (:id %2)) [] actual-seats))] 
-  	] 
-	  	
-	
+  		[:span.tickets (pr-str (reduce #(conj %1 (:id %2)) [] actual-seats))]
+  	]
+
+
   	(if is-pending?
-  		[:button {:onClick (fn[e] 
-  			(let [url (str "/api/confirm" 
+  		[:button {:onClick (fn[e]
+  			(let [url (str "/api/confirm"
 									"?booking_id=" (js/encodeURIComponent id))]
 
   					(if (.confirm js/window "Підтвердити?")
@@ -372,13 +388,13 @@ or a formatting string like \"dd MMMM yyyy\""
 										;; call refresh
 									))) "POST")
   						)
-					)							
+					)
 
   	)} "Підтвердити"])
 
-  	(if is-pending? 
-  		[:button {:onClick (fn[e] 
-  				(let [url (str "/api/discard" 
+  	(if is-pending?
+  		[:button {:onClick (fn[e]
+  				(let [url (str "/api/discard"
 									"?booking_id=" (js/encodeURIComponent id))]
 
   					(if (.confirm js/window "Видалити?")
@@ -397,7 +413,7 @@ or a formatting string like \"dd MMMM yyyy\""
 					)
   		)} "Cкасувати"])
 
-  	(if is-paid? 
+  	(if is-paid?
   		[:span "ВИКУПЛЕНО"]
   		)
 
@@ -405,15 +421,15 @@ or a formatting string like \"dd MMMM yyyy\""
  ))
 
 
-(rum/defc admin-panel < rum/cursored rum/cursored-watch [app-state] 
+(rum/defc admin-panel < rum/cursored rum/cursored-watch [app-state]
 	(let [error (rum/cursor app-state [:error])
-		  bookings (rum/cursor app-state [:bookings])] 
+		  bookings (rum/cursor app-state [:bookings])]
 
 		[:div
 			(if @error [:div.error-message @error])
 
-			(if @bookings 
-				(into [:div] 
+			(if @bookings
+				(into [:div]
 					(map (fn[[booking seats]]
 							(rum/with-props admin-booking booking seats app-state :rum/key (:id booking)))
 					@bookings))

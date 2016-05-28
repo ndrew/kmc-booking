@@ -3,12 +3,11 @@
 	          [ring.adapter.jetty :as ring]
 	          [compojure.route :as route]
 	          [compojure.handler :as handler]
-            
+
             [ring.middleware.params :as params]
 
-            [kmc-booking.routing :as rounting]
-            [kmc-booking.db :as db]
             [kmc-booking.core :as core]
+            [kmc-booking.routing :as rounting]
 
 
             [cemerick.friend :as friend]
@@ -26,19 +25,18 @@
   rounting/routes
   rounting/api
   (route/resources "/")
-); (route/not-found (layout/four-oh-four))
+)
 
 
-(def app* (-> 
+(def app* (->
             (handler/site routes)
             (params/wrap-params)
             ))
 
 
 (def users (atom {"admin" {:username "admin"
-                    :password "$2a$10$1TjUe7363gEbtNJwG5FnMOb3.o3AsZL4cqcLUc5iSYPNgasR9Es1u"
+                    :password (:admin-path core/config)
                     :roles #{::admin}}})
-
 )
 
 
@@ -52,29 +50,24 @@
 
 
 
-(defn init[] 
-  (db/init-db)
-  (core/init-seats! (db/get-seats)))
-
-
 
 (defn start [port]
-  (init)
+  (core/init!)
   (ring/run-jetty application {:port port
                                :join? false}))
 
 
-(defn destroy[] 
-  ;; 
+(defn destroy[]
+  ;;
 )
 
 
 ;; uncomment for figwheel
-;;(init)
+;;(init!)
 
 
-(defn -main 
+(defn -main
   "for heroku"
   []
-  (let [port (Integer. (or (System/getenv "PORT") "8080"))]
+  (let [port (Integer. (or (System/getenv "PORT") "8081"))]
     (start port)))

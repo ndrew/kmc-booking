@@ -4,7 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.7.0-beta2"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/java.jdbc "0.3.6"]
                  [postgresql "9.3-1102.jdbc41"]
                  [ring/ring-jetty-adapter "1.4.0-beta1"]
@@ -22,7 +22,8 @@
                  [com.cognitect/transit-clj "0.8.271"]
                  [com.cognitect/transit-cljs "0.8.207"]
 
-                  [org.clojure/core.cache "0.6.3"]
+                [org.clojure/core.cache "0.6.3"]
+
                  ]
 
   :plugins [
