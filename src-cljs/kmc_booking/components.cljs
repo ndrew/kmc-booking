@@ -323,7 +323,10 @@ or a formatting string like \"dd MMMM yyyy\""
 						"Придбати"]
 
 					(if-not (can-select-more? booked)
-						[:div.info-message (str "Ми продаємо не більше " MAX_SEATS " квитків в одні руки! Звиняйте")])]
+						[:div.info-message (str "Ми продаємо не більше " MAX_SEATS " квитків в одні руки! Звиняйте")])
+
+           [:div.note "Оплата карткою або готівкою"]
+           ]
 
 
 			)

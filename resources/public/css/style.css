@@ -548,7 +548,7 @@ button {
 
   text-align: center;
 
-  min-height: 30px;
+  min-height: 50px;
 }
 
 #form .info-message {
@@ -651,4 +651,14 @@ button.disabled {
     box-shadow: 0px 3px 0px rgba(16, 149, 194, 1), 0px 3px 6px rgba(0,0,0,.9);
     position: relative;
     top: 6px;
+}
+
+.note {
+  font-size: .7rem;
+  margin-top: .3rem;
+}
+
+.note:before {
+  content: "* ";
+  color: red;
 }
