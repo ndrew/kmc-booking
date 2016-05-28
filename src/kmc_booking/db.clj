@@ -199,6 +199,15 @@
 	(create-history-table!)
   )
 
+(defn migrate__mister_1! []
+	(drop-table! "seats")
+	(create-seats-table!)
+  (drop-table! "bookings")
+	(create-bookings-table!)
+  (drop-table! "history")
+	(create-history-table!)
+)
+
 (defn init-db[config]
 	(try
 
@@ -211,6 +220,7 @@
 		(migrate-live! "1_reinit_seats" migrate__reinit_seats!)
 		(migrate-live! "2_seats_for_judges"  migrate__seats_for_judges!)
     (migrate-live! "3_mister"  migrate__mister!)
+    (migrate-live! "4_mister"  migrate__mister_1!)
 	(catch Exception e
 		(do
 			(print (.getNextException e)))))

@@ -279,12 +279,24 @@ button {
   /*cursor:crosshair;*/
 }
 
+.price_40 {
+  background-color: #74d1eb;
+}
+
+.price_50 {
+  background-color: #9de7d9;
+}
+
+.price_60 {
+  background-color: #f3b4dc;
+}
+
 .pending {
-  background-color: rgba(128,128,128,0.5);
+  background-color: #e2e2e2;
 }
 
 .paid {
-  background-color: rgba(28,160,158,0.2);
+  background-color: #fff;
 }
 
 .paid:hover, .pending:hover {
@@ -292,8 +304,10 @@ button {
 }
 
 .your {
-  background-color: rgba(16, 149, 194, .8);
+  background-color: #ffe82b;
 }
+
+
 
 
 #scheme {
