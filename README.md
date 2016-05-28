@@ -1,14 +1,62 @@
 # kmc-booking
 
-A Clojure library designed to ... well, that part is up to you.
+kmc-booking це система для бронювання місць на могилянських подіях в КМЦ.
 
-## Usage
+kmc-booking складається з 2х частин — фронтенду (головної сторінки й сторінки для бронювання з схемою кмц) й бекенду (адмінка). 
 
-FIXME
 
-## License
 
-Copyright © 2015 FIXME
+## Налаштування 
+
+Ось інструкція як настроїти систему бронювання під свій захід.
+
+### Git
+
+Початковий шаблон системи <strike>лежить</strike>лежатиме в гілці master, робимо fork або просто скачуємо файли звідтілля. 
+
+### Головна сторінка 
+
+<strike>Лендінг</strike>
+
+Головна сторінка лежить в resources/public/landing/index.html, стилі й картинки в resources/public/css й resources/public/img відповідно — адаптуй під свій захід на здоров'я.
+
+В принципі, можна міняти все, окрім resources/public/booking/ — там лежить сторінка для вибору місць в кмц.
+
+Для live-reload можна запустити
+
+	lein figwheel
+	
+й головна сторінка буде доступна на http://localhost:3449/landing/index.html
+
+Figwheel автоматично буде підвантажувати зміни css, але не html.
+
+### Адмінка
+
+...
+
+#### Налаштування цін
+
+
+### Хостінг
+
+kmc-booking написаний на clojure, для попередніх подій (міс кма 2015/містер кма 2016) хостився на heroku, але при бажанні його можна підняти деінде. 
+
+#### Heroku
+
+створюємо там application (як воно там зветься?) на heroku, підв'язуємо туди гілку master цього репозиторію (через fork на гітхабі, або копіюємо файли в git-репозиторій що створює хероку).
+
+Додаємо плагін postgres для нашого application`а
+
+На час проведення заходу краще проплатити повний dyno, але для тестування можна використовувати безплатний dyno
+
+#### Домен
+
+купуємо домен й налаштовуємо CNAME/ANAME/ALIAS на <yourapp>.herokuapp.com
+
+
+## Ліцензія
+
+Зроблено лівою ногою © 2015-2016 Andrij Sernyak
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
