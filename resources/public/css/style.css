@@ -297,7 +297,7 @@ button {
 }
 
 .paid {
-  background-color: #fff;
+  background-color: #fafafa;
 }
 
 .paid:hover, .pending:hover {
